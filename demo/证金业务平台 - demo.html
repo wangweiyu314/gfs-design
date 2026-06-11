@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>证金业务平台</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        /* ===== 基础重置与变量 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* 品牌色 */
+            --gf-primary: #2A6CDD;
+            --gf-primary-hover: #1E5BBF;
+            --gf-primary-light: rgba(42, 108, 221, 0.1);
+            
+            /* 功能色 */
+            --gf-success: #52C41A;
+            --gf-warning: #FAAD14;
+            --gf-error: #F5222D;
+            --gf-info: #2A6CDD;
+            
+            /* 中性色 */
+            --gf-white: #FFFFFF;
+            --gf-n1: #F7F8FA;
+            --gf-n2: #F0F2F5;
+            --gf-n3: #E6EAF0;
+            --gf-n4: #D7DCE0;
+            --gf-n5: #C8C9CC;
+            --gf-n6: #939599;
+            --gf-n7: #67696E;
+            --gf-n8: #313133;
+            --gf-n9: #13161B;
+            
+            /* 导航色 */
+            --gf-nav-bg: #0C1D43;
+            --gf-nav-hover: #0A1735;
+            
+            /* 间距 */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            
+            /* 阴影 */
+            --shadow-low: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 6px 16px rgba(0, 0, 0, 0.12);
+            --shadow-high: 0 12px 32px rgba(0, 0, 0, 0.14);
+            
+            /* 圆角 */
+            --radius-1: 2px;
+            --radius-2: 4px;
+            
+            /* 字体 */
+            --font-cn: "Microsoft YaHei", "PingFang SC", sans-serif;
+            --font-en: "SF Pro Display", "DIN Alternate", -apple-system, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-cn);
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--gf-n8);
+            background-color: var(--gf-n1);
+        }
+
+        /* ===== 顶部导航栏 ===== */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: var(--gf-nav-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-6);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-6);
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gf-white);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--gf-primary), var(--gf-primary-hover));
+            border-radius: var(--radius-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: var(--space-1);
+        }
+
+        .header-nav-item {
+            padding: 8px 16px;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: var(--radius-1);
+            transition: all 0.2s ease;
+        }
+
+        .header-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .header-nav-item.active {
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--gf-white);
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gf-primary), var(--gf-primary-hover));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ===== 多标签导航 ===== */
+        .tab-nav {
+            position: fixed;
+            top: 56px;
+            left: 208px;
+            right: 0;
+            height: 40px;
+            background: var(--gf-white);
+            border-bottom: 1px solid var(--gf-n2);
+            z-index: 999;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 var(--space-4);
+            gap: var(--space-1);
+        }
+
+        .tab-item {
+            height: 36px;
+            padding: 0 var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: 13px;
+            color: var(--gf-n6);
+            background: var(--gf-n1);
+            border: 1px solid var(--gf-n2);
+            border-bottom: none;
+            border-radius: var(--radius-2) var(--radius-2) 0 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-item:hover {
+            color: var(--gf-primary);
+        }
+
+        .tab-item.active {
+            background: var(--gf-white);
+            color: var(--gf-primary);
+            font-weight: 600;
+            border-bottom: 1px solid var(--gf-white);
+            margin-bottom: -1px;
+        }
+
+        .tab-close {
+            width: 14px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 12px;
+        }
+
+        .tab-close:hover {
+            background: var(--gf-n2);
+        }
+
+        /* ===== 侧边栏导航 ===== */
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            width: 208px;
+            bottom: 0;
+            background: var(--gf-white);
+            border-right: 1px solid var(--gf-n2);
+            z-index: 998;
+            overflow-y: auto;
+        }
+
+        .menu-list {
+            padding: var(--space-2) 0;
+        }
+
+        .menu-item {
+            margin: 0 var(--space-2);
+            border-radius: var(--radius-2);
+            overflow: hidden;
+        }
+
+        .menu-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-4);
+            cursor: pointer;
+            color: var(--gf-n6);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .menu-header:hover {
+            background: var(--gf-n1);
+        }
+
+        .menu-header.active {
+            color: var(--gf-primary);
+            background: var(--gf-primary-light);
+            font-weight: 600;
+        }
+
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ===== 主内容区 ===== */
+        .main-content {
+            margin-left: 208px;
+            margin-top: 96px;
+            padding: var(--space-6);
+            min-height: calc(100vh - 96px);
+            background: var(--gf-white);
+        }
+
+        /* ===== 搜索栏 ===== */
+        .search-bar {
+            background: var(--gf-white);
+            padding: var(--space-4) var(--space-5);
+            border-radius: var(--radius-2);
+            box-shadow: var(--shadow-low);
+            margin-bottom: var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            border: 1px solid var(--gf-n2);
+            border-radius: var(--radius-2);
+            padding: 8px var(--space-3);
+            transition: all 0.2s ease;
+        }
+
+        .search-input-wrapper:focus-within {
+            border-color: var(--gf-primary);
+            box-shadow: 0 0 0 3px rgba(42, 108, 221, 0.1);
+        }
+
+        .search-icon {
+            width: 16px;
+            height: 16px;
+            color: var(--gf-n6);
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            color: var(--gf-n8);
+            background: transparent;
+        }
+
+        .search-input::placeholder {
+            color: var(--gf-n6);
+        }
+
+        .btn {
+            height: 32px;
+            padding: 0 var(--space-4);
+            border-radius: var(--radius-1);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-1);
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gf-primary);
+            color: var(--gf-white);
+        }
+
+        .btn-primary:hover {
+            background: var(--gf-primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--gf-white);
+            color: var(--gf-n8);
+            border: 1px solid var(--gf-n4);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gf-primary);
+            color: var(--gf-primary);
+        }
+
+        /* ===== 模块区块 ===== */
+        .section {
+            background: var(--gf-white);
+            border-radius: var(--radius-2);
+            box-shadow: var(--shadow-low);
+            margin-bottom: var(--space-4);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-4) var(--space-5);
+            border-bottom: 1px solid var(--gf-n2);
+        }
+
+        .section-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .section-title-bar {
+            width: 4px;
+            height: 16px;
+            background: var(--gf-primary);
+            border-radius: var(--radius-1);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--gf-n9);
+        }
+
+        .section-body {
+            padding: var(--space-5);
+        }
+
+        /* ===== 筛选区 ===== */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .filter-label {
+            font-size: 13px;
+            color: var(--gf-n7);
+            font-weight: 500;
+        }
+
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .date-input {
+            width: 130px;
+            height: 32px;
+            border: 1px solid var(--gf-n2);
+            border-radius: var(--radius-2);
+            padding: 0 var(--space-3);
+            font-size: 13px;
+            color: var(--gf-n8);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .date-input:focus {
+            border-color: var(--gf-primary);
+            box-shadow: 0 0 0 3px rgba(42, 108, 221, 0.1);
+        }
+
+        .select-input {
+            width: 180px;
+            height: 32px;
+            border: 1px solid var(--gf-n2);
+            border-radius: var(--radius-2);
+            padding: 0 var(--space-3);
+            font-size: 13px;
+            color: var(--gf-n8);
+            outline: none;
+            cursor: pointer;
+            background: var(--gf-white);
+            transition: all 0.2s ease;
+        }
+
+        .select-input:focus {
+            border-color: var(--gf-primary);
+            box-shadow: 0 0 0 3px rgba(42, 108, 221, 0.1);
+        }
+
+        /* ===== KPI 卡片 ===== */
+        .kpi-cards {
+            display: flex;
+            gap: var(--space-4);
+            margin-bottom: var(--space-5);
+        }
+
+        .kpi-card {
+            flex: 1;
+            border-radius: var(--radius-2);
+            padding: var(--space-5);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .kpi-card.active {
+            background: linear-gradient(135deg, #5889FF, #316AFE);
+            box-shadow: 0 30px 60px rgba(77, 114, 240, 0.4);
+            color: var(--gf-white);
+        }
+
+        .kpi-card:not(.active) {
+            background: var(--gf-white);
+            border: 1px solid var(--gf-n2);
+        }
+
+        .kpi-card:not(.active):hover {
+            border-color: var(--gf-primary);
+        }
+
+        .kpi-label {
+            font-size: 14px;
+            margin-bottom: var(--space-2);
+        }
+
+        .kpi-card.active .kpi-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .kpi-card:not(.active) .kpi-label {
+            color: var(--gf-n6);
+        }
+
+        .kpi-main {
+            display: flex;
+            align-items: baseline;
+            gap: var(--space-2);
+            margin-bottom: var(--space-1);
+        }
+
+        .kpi-value {
+            font-family: var(--font-en);
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        .kpi-card.active .kpi-value {
+            color: var(--gf-white);
+        }
+
+        .kpi-card:not(.active) .kpi-value {
+            color: var(--gf-n9);
+        }
+
+        .kpi-percent {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .kpi-card.active .kpi-percent {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .kpi-card:not(.active) .kpi-percent {
+            color: var(--gf-n6);
+        }
+
+        .tag-warning {
+            font-size: 12px;
+            background: var(--gf-warning);
+            color: var(--gf-white);
+            padding: 2px 8px;
+            border-radius: 2px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .kpi-sub {
+            font-size: 12px;
+            margin-bottom: var(--space-4);
+        }
+
+        .kpi-card.active .kpi-sub {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .kpi-card:not(.active) .kpi-sub {
+            color: var(--gf-n6);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            padding-top: var(--space-4);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .kpi-card:not(.active) .kpi-grid {
+            border-top-color: var(--gf-n2);
+        }
+
+        .kpi-grid-item {
+            text-align: center;
+        }
+
+        .kpi-grid-label {
+            font-size: 12px;
+            margin-bottom: var(--space-1);
+        }
+
+        .kpi-card.active .kpi-grid-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .kpi-card:not(.active) .kpi-grid-label {
+            color: var(--gf-n6);
+        }
+
+        .kpi-grid-value {
+            font-family: var(--font-en);
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .kpi-card.active .kpi-grid-value:not(.trend-up):not(.trend-down) {
+            color: var(--gf-white);
+        }
+
+        .kpi-card:not(.active) .kpi-grid-value:not(.trend-up):not(.trend-down) {
+            color: var(--gf-n8);
+        }
+
+        .trend-up {
+            color: var(--gf-error) !important;
+        }
+
+        .trend-down {
+            color: var(--gf-success) !important;
+        }
+
+        .kpi-card.active .trend-up {
+            color: #FFB3B3 !important;
+        }
+
+        .kpi-card.active .trend-down {
+            color: #69E0D8 !important;
+        }
+
+        .trend-icon {
+            font-size: 12px;
+        }
+
+        /* ===== 图表区域 ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+        }
+
+        .chart-card {
+            background: var(--gf-white);
+            border: 1px solid var(--gf-n2);
+            border-radius: var(--radius-2);
+            padding: var(--space-4);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--gf-n9);
+        }
+
+        .chart-subtitle {
+            font-size: 13px;
+            color: var(--gf-n6);
+        }
+
+        .chart-container {
+            height: 280px;
+        }
+
+        .chart-container-small {
+            height: 120px;
+        }
+
+        /* 组合卡片样式 */
+        .combo-card {
+            display: grid;
+            grid-template-columns: 45% 1fr;
+            gap: var(--space-4);
+            align-items: start;
+        }
+
+        .combo-left {
+            display: grid;
+            grid-template-rows: 200px auto;
+            gap: var(--space-3);
+            justify-items: center;
+        }
+
+        .combo-right {
+            display: grid;
+            grid-template-rows: 200px auto;
+            gap: var(--space-3);
+            justify-items: center;
+        }
+
+        .chart-wrap {
+            width: 100%;
+            height: 200px;
+        }
+
+        .chart-wrap--tall {
+            height: 240px;
+        }
+
+        .combo-right--tall {
+            grid-template-rows: 240px auto;
+        }
+
+        .combo-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .combo-metric-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .combo-metric-label {
+            color: var(--gf-n6);
+        }
+
+        .combo-metric-value {
+            font-family: var(--font-en);
+            font-weight: 600;
+            color: var(--gf-n8);
+        }
+
+        /* ===== 客户业务概览 ===== */
+        .tabs-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(240, 242, 245, 0.6);
+            border-radius: var(--radius-2);
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .tab {
+            padding: 6px 16px;
+            font-size: 14px;
+            color: var(--gf-n6);
+            cursor: pointer;
+            border-radius: var(--radius-1);
+            transition: all 0.2s ease;
+        }
+
+        .tab:hover {
+            color: var(--gf-primary);
+        }
+
+        .tab.active {
+            background: var(--gf-white);
+            color: var(--gf-primary);
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(2, 38, 81, 0.06);
+        }
+
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+            margin-top: var(--space-4);
+        }
+
+        .table-card {
+            background: var(--gf-white);
+            border: 1px solid var(--gf-n2);
+            border-radius: var(--radius-2);
+            overflow: hidden;
+        }
+
+        .table-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-3) var(--space-4);
+            background: var(--gf-n1);
+            border-bottom: 1px solid var(--gf-n2);
+        }
+
+        .table-card-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gf-n9);
+        }
+
+        .table-more {
+            font-size: 13px;
+            color: var(--gf-primary);
+            cursor: pointer;
+        }
+
+        .table-more:hover {
+            color: var(--gf-primary-hover);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px var(--space-4);
+            text-align: left;
+            font-size: 13px;
+            border-bottom: 1px solid var(--gf-n2);
+        }
+
+        .data-table th {
+            background: var(--gf-n1);
+            color: var(--gf-n7);
+            font-weight: 500;
+        }
+
+        .data-table td {
+            color: var(--gf-n8);
+            font-family: var(--font-en);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background: var(--gf-n1);
+        }
+
+        .text-right {
+            text-align: right !important;
+        }
+
+        .text-positive {
+            color: var(--gf-error) !important;
+        }
+
+        .text-negative {
+            color: var(--gf-success) !important;
+        }
+
+        .data-table td .text-positive,
+        .data-table td .text-negative {
+            display: inline-block;
+            text-align: right;
+            min-width: 50px;
+        }
+
+        .td-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pie-legend-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .pie-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--gf-n6);
+            line-height: 16px;
+            height: 16px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .segmented-control {
+            display: flex;
+            background: rgba(240, 242, 245, 0.6);
+            border-radius: var(--radius-2);
+            padding: 3px;
+            gap: 3px;
+        }
+
+        .segmented-item {
+            padding: 4px 12px;
+            font-size: 12px;
+            color: var(--gf-n6);
+            cursor: pointer;
+            border-radius: var(--radius-1);
+            transition: all 0.2s ease;
+        }
+
+        .segmented-item.active {
+            background: var(--gf-white);
+            color: var(--gf-primary);
+            font-weight: 500;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 1400px) {
+            .charts-grid,
+            .tables-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-header">
+        <div class="header-left">
+            <div class="logo">
+                <div class="logo-icon">证</div>
+                <span>证金业务平台</span>
+            </div>
+            <nav class="header-nav">
+                <div class="header-nav-item active">首页</div>
+                <div class="header-nav-item">券源搜索</div>
+                <div class="header-nav-item">券源搜索结果汇总</div>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-avatar">张</div>
+                <span>张经理</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 多标签导航 -->
+    <div class="tab-nav">
+        <div class="tab-item active">
+            <span>首页</span>
+        </div>
+        <div class="tab-item">
+            <span>券源搜索</span>
+            <span class="tab-close">×</span>
+        </div>
+        <div class="tab-item">
+            <span>券源搜索结果汇总</span>
+            <span class="tab-close">×</span>
+        </div>
+    </div>
+
+    <!-- 侧边栏导航 -->
+    <aside class="sidebar">
+        <div class="menu-list">
+            <div class="menu-item">
+                <div class="menu-header active">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </div>
+                    <span>首页</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    </div>
+                    <span>证券借入</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                    </div>
+                    <span>意向管理</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                    </div>
+                    <span>申请管理</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                        </svg>
+                    </div>
+                    <span>接单管理</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                    <span>成交管理</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <span>合约管理</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                    </div>
+                    <span>专项服务</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                    <span>证券风控</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </div>
+                    <span>运营管理</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 20V10"></path>
+                            <path d="M12 20V4"></path>
+                            <path d="M6 20v-6"></path>
+                        </svg>
+                    </div>
+                    <span>绩效</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                        </svg>
+                    </div>
+                    <span>统计分析</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <span>券商拓展</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                            <path d="M2 2l7.586 7.586"></path>
+                            <circle cx="11" cy="11" r="2"></circle>
+                        </svg>
+                    </div>
+                    <span>证券出借</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-header">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </div>
+                    <span>系统管理</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <!-- 搜索栏 -->
+        <div class="search-bar">
+            <div class="search-input-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" class="search-input" placeholder="输入标的证券代码/名称">
+            </div>
+            <button class="btn btn-primary">券一下</button>
+        </div>
+
+        <!-- 机构业务概览模块 -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title-wrapper">
+                    <div class="section-title-bar"></div>
+                    <h2 class="section-title">机构业务概览</h2>
+                </div>
+            </div>
+            <div class="section-body">
+                <!-- 筛选控件 -->
+                <div class="filter-bar">
+                    <div class="filter-item">
+                        <span class="filter-label">时间范围</span>
+                        <div class="date-range">
+                            <input type="text" class="date-input" value="2022-08-15">
+                            <span>至</span>
+                            <input type="text" class="date-input" value="2022-10-15">
+                        </div>
+                    </div>
+                    <div class="filter-item">
+                        <span class="filter-label">分支机构</span>
+                        <select class="select-input">
+                            <option>广发证券</option>
+                            <option>上海分公司</option>
+                            <option>深圳分公司</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- KPI 卡片 -->
+                <div class="kpi-cards">
+                    <div class="kpi-card active">
+                        <div class="kpi-label">融券</div>
+                        <div class="kpi-main">
+                            <span class="kpi-value">3.98亿</span>
+                            <span class="kpi-percent">2.21%</span>
+                        </div>
+                        <div class="kpi-sub">期末余额、市占率</div>
+                        <div class="kpi-grid">
+                            <div class="kpi-grid-item">
+                                <div class="kpi-grid-label">较上月末</div>
+                                <div class="kpi-grid-value trend-up">
+                                    <span>+5.2%</span>
+                                    <span class="trend-icon">↑</span>
+                                </div>
+                            </div>
+                            <div class="kpi-grid-item">
+                                <div class="kpi-grid-label">较上年末</div>
+                                <div class="kpi-grid-value trend-up">
+                                    <span>+12.8%</span>
+                                    <span class="trend-icon">↑</span>
+                                </div>
+                            </div>
+                            <div class="kpi-grid-item">
+                                <div class="kpi-grid-label">期间日均</div>
+                                <div class="kpi-grid-value">
+                                    <span>3.85亿</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="tag-warning">待更新</span>
+                        <div class="kpi-label">转融券</div>
+                        <div class="kpi-main">
+                            <span class="kpi-value">0.31亿</span>
+                        </div>
+                        <div class="kpi-sub">期末余额、市占率</div>
+                        <div class="kpi-grid">
+                            <div class="kpi-grid-item">
+                                <div class="kpi-grid-label">较上月末</div>
+                                <div class="kpi-grid-value trend-down">
+                                    <span>-2.1%</span>
+                                    <span class="trend-icon">↓</span>
+                                </div>
+                            </div>
+                            <div class="kpi-grid-item">
+                                <div class="kpi-grid-label">较上年末</div>
+                                <div class="kpi-grid-value trend-up">
+                                    <span>+8.5%</span>
+                                    <span class="trend-icon">↑</span>
+                                </div>
+                            </div>
+                            <div class="kpi-grid-item">
+                                <div class="kpi-grid-label">期间日均</div>
+                                <div class="kpi-grid-value">
+                                    <span>0.29亿</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 图表区域 -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">融券基本情况</h3>
+                        </div>
+                        <div id="chart-line" class="chart-container"></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">融券业务构成</h3>
+                            <span class="chart-subtitle">按板块 / 按客户类型</span>
+                        </div>
+                        <div class="combo-card">
+                            <div class="combo-left">
+                                <div id="chart-pie-left" class="chart-wrap"></div>
+                                <div class="pie-legend-list">
+                                    <div class="pie-legend-item"><span class="legend-dot" style="background:#2A6CDD"></span><span>主板 | 市占率 26.13亿元 | 69.59%</span></div>
+                                    <div class="pie-legend-item"><span class="legend-dot" style="background:#52C41A"></span><span>创业板 | 市占率 0.97亿元 | 18.55%</span></div>
+                                    <div class="pie-legend-item"><span class="legend-dot" style="background:#FAAD14"></span><span>科创板 | 市占率 0.16亿元 | 8.43%</span></div>
+                                    <div class="pie-legend-item"><span class="legend-dot" style="background:#722ED1"></span><span>ETF | 市占率 3.7亿元 | 15.36%</span></div>
+                                </div>
+                            </div>
+                            <div class="combo-right">
+                                <div id="chart-pie-right" class="chart-wrap"></div>
+                                <div class="pie-legend-list">
+                                    <div class="pie-legend-item"><span class="legend-dot" style="background:#2A6CDD"></span><span>机构 | 市占率 18.2亿元 | 52.10%</span></div>
+                                    <div class="pie-legend-item"><span class="legend-dot" style="background:#52C41A"></span><span>产品 | 市占率 8.6亿元 | 24.60%</span></div>
+                                    <div class="pie-legend-item"><span class="legend-dot" style="background:#FAAD14"></span><span>自营 | 市占率 5.4亿元 | 15.48%</span></div>
+                                    <div class="pie-legend-item"><span class="legend-dot" style="background:#722ED1"></span><span>其他 | 市占率 2.7亿元 | 7.82%</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">融券经营情况</h3>
+                        </div>
+                        <div id="chart-bar" class="chart-container"></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">上海分公司</h3>
+                        </div>
+                        <div class="combo-card">
+                            <div class="combo-left">
+                                <div id="chart-combo-pie" class="chart-wrap"></div>
+                                <div class="pie-legend-list">
+                                    <div class="pie-legend-item"><span class="legend-dot" style="background:#2A6CDD"></span><span>主板 | 市占率 2.25亿元 | 8.62%</span></div>
+                                    <div class="pie-legend-item"><span class="legend-dot" style="background:#52C41A"></span><span>创业板 | 市占率 0.82亿元 | 3.14%</span></div>
+                                    <div class="pie-legend-item"><span class="legend-dot" style="background:#FAAD14"></span><span>科创板 | 市占率 0.41亿元 | 1.57%</span></div>
+                                    <div class="pie-legend-item"><span class="legend-dot" style="background:#722ED1"></span><span>ETF | 市占率 0.21亿元 | 0.80%</span></div>
+                                </div>
+                            </div>
+                            <div class="combo-right combo-right--tall">
+                                <div id="chart-combo-line" class="chart-wrap chart-wrap--tall"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 客户业务概览模块 -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title-wrapper">
+                    <div class="section-title-bar"></div>
+                    <h2 class="section-title">客户业务概览</h2>
+                </div>
+                <div class="tabs-wrapper">
+                    <div class="tabs">
+                        <div class="tab active">客户</div>
+                        <div class="tab">产品相关人</div>
+                        <div class="tab">合约相关人</div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="tables-grid">
+                    <!-- 融券余额前五 -->
+                    <div class="table-card">
+                        <div class="table-card-header">
+                            <span class="table-card-title">融券余额前五</span>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="segmented-control">
+                                    <div class="segmented-item active">前五</div>
+                                    <div class="segmented-item">后五</div>
+                                </div>
+                                <span class="table-more">更多</span>
+                            </div>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>客户名称</th>
+                                    <th class="text-right">融券余额(亿)</th>
+                                    <th class="text-right">融券最大标的/市值(亿)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>客户A股份有限公司</td>
+                                    <td class="text-right">1.25</td>
+                                    <td class="text-right">贵州茅台/0.35</td>
+                                </tr>
+                                <tr>
+                                    <td>客户B投资管理有限公司</td>
+                                    <td class="text-right">0.98</td>
+                                    <td class="text-right">宁德时代/0.28</td>
+                                </tr>
+                                <tr>
+                                    <td>客户C资产管理计划</td>
+                                    <td class="text-right">0.76</td>
+                                    <td class="text-right">比亚迪/0.22</td>
+                                </tr>
+                                <tr>
+                                    <td>客户D私募基金</td>
+                                    <td class="text-right">0.62</td>
+                                    <td class="text-right">招商银行/0.18</td>
+                                </tr>
+                                <tr>
+                                    <td>客户E信托计划</td>
+                                    <td class="text-right">0.45</td>
+                                    <td class="text-right">中国平安/0.15</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 融券余额变动 -->
+                    <div class="table-card">
+                        <div class="table-card-header">
+                            <span class="table-card-title">融券余额变动</span>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="segmented-control">
+                                    <div class="segmented-item active">前五</div>
+                                    <div class="segmented-item">后五</div>
+                                </div>
+                                <span class="table-more">更多</span>
+                            </div>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>客户名称</th>
+                                    <th class="text-right">融券余额(亿)</th>
+                                    <th class="text-right">变动幅度</th>
+                                    <th>融券变动最大标的及幅度</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>客户A股份有限公司</td>
+                                    <td class="text-right">1.25</td>
+                                    <td class="text-right text-positive">+15.2%</td>
+                                    <td class="td-flex"><span>贵州茅台</span><span class="text-positive">+8.5%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>客户F量化对冲基金</td>
+                                    <td class="text-right">0.38</td>
+                                    <td class="text-right text-positive">+12.8%</td>
+                                    <td class="td-flex"><span>五粮液</span><span class="text-positive">+6.2%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>客户G证券自营</td>
+                                    <td class="text-right">0.52</td>
+                                    <td class="text-right text-negative">-8.5%</td>
+                                    <td class="td-flex"><span>隆基绿能</span><span class="text-negative">-5.1%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>客户H保险资管</td>
+                                    <td class="text-right">0.41</td>
+                                    <td class="text-right text-positive">+6.3%</td>
+                                    <td class="td-flex"><span>美的集团</span><span class="text-positive">+4.8%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>客户I银行理财</td>
+                                    <td class="text-right">0.33</td>
+                                    <td class="text-right text-negative">-4.2%</td>
+                                    <td class="td-flex"><span>中信证券</span><span class="text-negative">-3.5%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 锁券余额前五 -->
+                    <div class="table-card">
+                        <div class="table-card-header">
+                            <span class="table-card-title">锁券余额前五</span>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="segmented-control">
+                                    <div class="segmented-item active">前五</div>
+                                    <div class="segmented-item">后五</div>
+                                </div>
+                                <span class="table-more">更多</span>
+                            </div>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>客户名称</th>
+                                    <th class="text-right">锁券余额(亿)</th>
+                                    <th class="text-right">锁券最大标的/市值(亿)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>客户J量化私募</td>
+                                    <td class="text-right">0.85</td>
+                                    <td class="text-right">海康威视/0.25</td>
+                                </tr>
+                                <tr>
+                                    <td>客户K对冲基金</td>
+                                    <td class="text-right">0.72</td>
+                                    <td class="text-right">立讯精密/0.21</td>
+                                </tr>
+                                <tr>
+                                    <td>客户L券商资管</td>
+                                    <td class="text-right">0.58</td>
+                                    <td class="text-right">迈瑞医疗/0.18</td>
+                                </tr>
+                                <tr>
+                                    <td>客户M信托产品</td>
+                                    <td class="text-right">0.45</td>
+                                    <td class="text-right">恒瑞医药/0.15</td>
+                                </tr>
+                                <tr>
+                                    <td>客户N期货资管</td>
+                                    <td class="text-right">0.38</td>
+                                    <td class="text-right">伊利股份/0.12</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 锁券余额变动 -->
+                    <div class="table-card">
+                        <div class="table-card-header">
+                            <span class="table-card-title">锁券余额变动</span>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="segmented-control">
+                                    <div class="segmented-item active">前五</div>
+                                    <div class="segmented-item">后五</div>
+                                </div>
+                                <span class="table-more">更多</span>
+                            </div>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>客户名称</th>
+                                    <th class="text-right">锁券余额(亿)</th>
+                                    <th class="text-right">变动幅度</th>
+                                    <th>锁券变动最大标的及幅度</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>客户J量化私募</td>
+                                    <td class="text-right">0.85</td>
+                                    <td class="text-right text-positive">+18.5%</td>
+                                    <td class="td-flex"><span>海康威视</span><span class="text-positive">+10.2%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>客户O多策略基金</td>
+                                    <td class="text-right">0.28</td>
+                                    <td class="text-right text-positive">+14.2%</td>
+                                    <td class="td-flex"><span>顺丰控股</span><span class="text-positive">+8.5%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>客户P指数增强</td>
+                                    <td class="text-right">0.42</td>
+                                    <td class="text-right text-negative">-6.8%</td>
+                                    <td class="td-flex"><span>药明康德</span><span class="text-negative">-4.2%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>客户Q市场中性</td>
+                                    <td class="text-right">0.35</td>
+                                    <td class="text-right text-positive">+5.5%</td>
+                                    <td class="td-flex"><span>爱尔眼科</span><span class="text-positive">+3.8%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>客户R套利策略</td>
+                                    <td class="text-right">0.22</td>
+                                    <td class="text-right text-negative">-3.2%</td>
+                                    <td class="td-flex"><span>智飞生物</span><span class="text-negative">-2.5%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 初始化图表
+        // 1. 折线面积图 - 融券基本情况
+        const lineChart = echarts.init(document.getElementById('chart-line'));
+        lineChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross' }
+            },
+            legend: {
+                data: ['市场余额', '市占率'],
+                bottom: 0,
+                textStyle: { fontSize: 12, color: '#67696E' }
+            },
+            grid: {
+                left: '3%',
+                right: '3%',
+                bottom: '15%',
+                top: '10%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['08-15', '08-22', '08-29', '09-05', '09-12', '09-19', '09-26', '10-03', '10-10', '10-15'],
+                axisLine: { lineStyle: { color: '#E5E6EB' } },
+                axisLabel: { color: '#86909C', fontSize: 11 }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '余额(亿)',
+                    nameTextStyle: { color: '#86909C', fontSize: 11 },
+                    axisLine: { show: false },
+                    axisLabel: { color: '#86909C', fontSize: 11 },
+                    splitLine: { lineStyle: { color: '#F0F2F5' } }
+                },
+                {
+                    type: 'value',
+                    name: '市占率(%)',
+                    nameTextStyle: { color: '#86909C', fontSize: 11 },
+                    axisLine: { show: false },
+                    axisLabel: { color: '#86909C', fontSize: 11, formatter: '{value}%' },
+                    splitLine: { show: false }
+                }
+            ],
+            series: [
+                {
+                    name: '市场余额',
+                    type: 'line',
+                    smooth: true,
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(42, 108, 221, 0.3)' },
+                            { offset: 1, color: 'rgba(42, 108, 221, 0.05)' }
+                        ])
+                    },
+                    lineStyle: { color: '#2A6CDD', width: 2 },
+                    itemStyle: { color: '#2A6CDD' },
+                    data: [3.2, 3.35, 3.45, 3.62, 3.78, 3.85, 3.92, 3.88, 3.95, 3.98]
+                },
+                {
+                    name: '市占率',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    smooth: true,
+                    lineStyle: { color: '#52C41A', width: 2 },
+                    itemStyle: { color: '#52C41A' },
+                    data: [1.8, 1.85, 1.92, 2.05, 2.12, 2.15, 2.18, 2.16, 2.20, 2.21]
+                }
+            ]
+        });
+
+        // 2. 双环形饼图 - 融券业务构成（左右各一个独立环形图）
+        const pieChartLeft = echarts.init(document.getElementById('chart-pie-left'));
+        pieChartLeft.setOption({
+            tooltip: { trigger: 'item', formatter: '{b}: {c}%' },
+            series: [{
+                type: 'pie',
+                radius: ['50%', '70%'],
+                center: ['50%', '45%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: true,
+                    position: 'center',
+                    formatter: '3.98亿\n期末余额',
+                    fontSize: 13,
+                    color: '#13161B',
+                    fontWeight: 500,
+                    rich: {
+                        val: { fontSize: 18, fontWeight: 600, color: '#13161B' },
+                        lbl: { fontSize: 12, color: '#67696E', lineHeight: 20 }
+                    }
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        formatter: '3.98亿\n期末余额',
+                        fontSize: 13,
+                        color: '#13161B',
+                        fontWeight: 500
+                    }
+                },
+                labelLine: { show: false },
+                data: [
+                    { value: 26.13, name: '主板', itemStyle: { color: '#2A6CDD' } },
+                    { value: 6.97, name: '创业板', itemStyle: { color: '#52C41A' } },
+                    { value: 3.17, name: '科创板', itemStyle: { color: '#FAAD14' } },
+                    { value: 3.70, name: 'ETF', itemStyle: { color: '#722ED1' } }
+                ]
+            }]
+        });
+
+        const pieChartRight = echarts.init(document.getElementById('chart-pie-right'));
+        pieChartRight.setOption({
+            tooltip: { trigger: 'item', formatter: '{b}: {c}%' },
+            series: [{
+                type: 'pie',
+                radius: ['50%', '70%'],
+                center: ['50%', '45%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: true,
+                    position: 'center',
+                    formatter: '0.35亿\n公司',
+                    fontSize: 13,
+                    color: '#13161B',
+                    fontWeight: 500
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        formatter: '0.35亿\n公司',
+                        fontSize: 13,
+                        color: '#13161B',
+                        fontWeight: 500
+                    }
+                },
+                labelLine: { show: false },
+                data: [
+                    { value: 18.2, name: '机构', itemStyle: { color: '#2A6CDD' } },
+                    { value: 8.6, name: '产品', itemStyle: { color: '#52C41A' } },
+                    { value: 5.4, name: '自营', itemStyle: { color: '#FAAD14' } },
+                    { value: 2.7, name: '其他', itemStyle: { color: '#722ED1' } }
+                ]
+            }]
+        });
+
+        // 3. 柱状图 - 融券经营情况
+        const barChart = echarts.init(document.getElementById('chart-bar'));
+        barChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' }
+            },
+            grid: {
+                left: '3%',
+                right: '3%',
+                bottom: '5%',
+                top: '10%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['天河营业部', '越秀营业部', '海珠营业部', '番禺营业部', '白云营业部', '黄埔营业部', '南沙营业部', '花都营业部'],
+                axisLine: { lineStyle: { color: '#E5E6EB' } },
+                axisLabel: { color: '#86909C', fontSize: 11, rotate: 20 }
+            },
+            yAxis: {
+                type: 'value',
+                name: '日均余额(万)',
+                nameTextStyle: { color: '#86909C', fontSize: 11 },
+                axisLine: { show: false },
+                axisLabel: { color: '#86909C', fontSize: 11 },
+                splitLine: { lineStyle: { color: '#F0F2F5' } }
+            },
+            series: [{
+                type: 'bar',
+                barWidth: '50%',
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#2A6CDD' },
+                        { offset: 1, color: '#5889FF' }
+                    ]),
+                    borderRadius: [4, 4, 0, 0]
+                },
+                data: [1250, 1080, 920, 850, 780, 650, 520, 480]
+            }]
+        });
+
+        // 4. 组合图表 - 上海分公司
+        const comboPieChart = echarts.init(document.getElementById('chart-combo-pie'));
+        comboPieChart.setOption({
+            tooltip: { trigger: 'item' },
+            series: [{
+                type: 'pie',
+                radius: ['50%', '70%'],
+                center: ['50%', '45%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: true,
+                    position: 'center',
+                    formatter: '3.69亿\n期末余额',
+                    fontSize: 13,
+                    color: '#13161B',
+                    fontWeight: 500
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        formatter: '3.69亿\n期末余额',
+                        fontSize: 13,
+                        color: '#13161B',
+                        fontWeight: 500
+                    }
+                },
+                labelLine: { show: false },
+                data: [
+                    { value: 2.25, name: '主板', itemStyle: { color: '#2A6CDD' } },
+                    { value: 0.82, name: '创业板', itemStyle: { color: '#52C41A' } },
+                    { value: 0.41, name: '科创板', itemStyle: { color: '#FAAD14' } },
+                    { value: 0.21, name: 'ETF', itemStyle: { color: '#722ED1' } }
+                ]
+            }]
+        });
+
+        const comboLineChart = echarts.init(document.getElementById('chart-combo-line'));
+        comboLineChart.setOption({
+            tooltip: { trigger: 'axis' },
+            legend: {
+                data: ['融券余额', '公司余额占比'],
+                bottom: 0,
+                textStyle: { fontSize: 11, color: '#67696E' }
+            },
+            grid: {
+                left: '8%',
+                right: '8%',
+                bottom: '15%',
+                top: '10%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['2022/01', '2022/02', '2022/03', '2022/04', '2022/05'],
+                axisLine: { lineStyle: { color: '#E5E6EB' } },
+                axisTick: { show: false },
+                axisLabel: { color: '#86909C', fontSize: 10 }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    min: 0,
+                    max: 10,
+                    axisLine: { show: false },
+                    axisLabel: { color: '#86909C', fontSize: 10 },
+                    splitLine: { lineStyle: { color: '#F0F2F5' } }
+                },
+                {
+                    type: 'value',
+                    min: 6,
+                    max: 10,
+                    axisLine: { show: false },
+                    axisLabel: { color: '#86909C', fontSize: 10, formatter: '{value}%' },
+                    splitLine: { show: false }
+                }
+            ],
+            series: [
+                {
+                    name: '融券余额',
+                    type: 'line',
+                    yAxisIndex: 0,
+                    smooth: true,
+                    symbol: 'circle',
+                    symbolSize: 5,
+                    lineStyle: { color: '#2A6CDD', width: 2 },
+                    itemStyle: { color: '#2A6CDD' },
+                    data: [6.2, 6.8, 7.6, 8.1, 8.6]
+                },
+                {
+                    name: '公司余额占比',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    smooth: true,
+                    symbol: 'circle',
+                    symbolSize: 5,
+                    lineStyle: { color: '#FA8C16', width: 2 },
+                    itemStyle: { color: '#FA8C16' },
+                    data: [6.8, 7.2, 7.5, 8.2, 8.8]
+                }
+            ]
+        });
+
+        // 响应式处理
+        window.addEventListener('resize', () => {
+            lineChart.resize();
+            pieChartLeft.resize();
+            pieChartRight.resize();
+            barChart.resize();
+            comboPieChart.resize();
+            comboLineChart.resize();
+        });
+
+        // KPI 卡片切换
+        document.querySelectorAll('.kpi-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.kpi-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Tab 切换
+        document.querySelectorAll('.tabs .tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 分段控制器切换
+        document.querySelectorAll('.segmented-control').forEach(control => {
+            control.querySelectorAll('.segmented-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    control.querySelectorAll('.segmented-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
