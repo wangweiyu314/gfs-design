@@ -37,6 +37,7 @@
 | Token | 默认值 |
 |-------|--------|
 | --radius-small | 2px |
+| --radius-sm | 2px |
 | --radius-default | 4px |
 
 ## 阴影变量

@@ -6,10 +6,14 @@
 
 - 边框：#E8E8E8 (N2)
 - 表头背景：#F7F8FA（斑马纹表头）/ #F5F5F5 (N1)
+- 表头字号：13px，字重 600，颜色 #434343 (N7)
+- 表头内边距：`padding: 12px 12px`
+- 数据行内边距：`padding: 10px 12px`
 - 内容区背景：#FFFFFF（白色）
 - 行高：48px（大）/ 40px（中）/ 32px（小）
 - 斑马纹：交替 #FAFCFF / #FFFFFF 背景
 - 悬停行：#F5F5F5 (N1) 背景
+- 表格字号：13px
 - **数字列字体**：DIN Alternate, DIN, SF Pro Display, Helvetica Neue（金融数据必须使用 DIN 字体）
 
 ### 数字列字体规范（强制）

@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>证金业务平台 - 睿享融通</title>
+<style>
+/* ========== CSS Variables (Design Tokens) ========== */
+:root {
+  --color-primary: #2A6CDD;
+  --color-primary-hover: #1E5BBF;
+  --color-primary-active: #164A9E;
+  --color-primary-light: rgba(42,108,221,0.1);
+  --color-primary-focus: rgba(42,108,221,0.2);
+  --color-success: #52C41A;
+  --color-warning: #FAAD14;
+  --color-error: #F5222D;
+  --color-info: #2A6CDD;
+  --color-nav: #0C1D43;
+  --color-nav-hover: #0A1735;
+  --color-page-bg: #F7F8FA;
+  --color-card-bg: #FFFFFF;
+  --color-border: #F0F2F5;
+  --color-border-light: #E8E8E8;
+  --color-text-primary: #313133;
+  --color-text-title: #262626;
+  --color-text-secondary: #939599;
+  --color-text-muted: #C8C9CC;
+  --color-table-header: #F7F8FA;
+  --color-table-stripe: #FAFCFF;
+  --color-table-hover: #F5F5F5;
+  --font-family: 'Microsoft YaHei','PingFang SC','SF Pro Display','DIN Alternate',-apple-system,'Helvetica Neue',Arial,sans-serif;
+  --font-number: 'DIN Alternate','DIN','SF Pro Display','Helvetica Neue';
+  --font-size-h6: 20px;
+  --font-size-body: 14px;
+  --font-size-body-sm: 13px;
+  --font-size-small: 12px;
+  --radius-small: 2px;
+  --radius-sm: 2px;
+  --radius-default: 4px;
+  --shadow-card: 0px 2px 8px rgba(0,0,0,0.10);
+  --shadow-dropdown: 0 6px 16px rgba(0,0,0,0.12);
+  --shadow-modal: 0 12px 32px rgba(0,0,0,0.14);
+  --transition-fast: 200ms ease-in-out;
+  --transition-normal: 300ms ease-in-out;
+  --header-height: 64px;
+  --sidebar-width: 208px;
+  --tab-height: 40px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px;
+}
+
+/* ========== Reset & Base ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+svg{overflow:visible}
+body{font-family:var(--font-family);font-size:var(--font-size-body);color:var(--color-text-primary);background:var(--color-page-bg);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--color-primary);text-decoration:none}a:hover{color:var(--color-primary-hover)}
+ul,ol{list-style:none}
+input,select,button,textarea{font-family:inherit;font-size:inherit}
+button{cursor:pointer;border:none;background:none}
+
+/* ========== Top Header ========== */
+.gf-header{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--header-height);background:var(--color-nav);box-shadow:0px 4px 12px rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:space-between;padding:0 var(--space-6)}
+.gf-header__left{display:flex;align-items:center;gap:var(--space-6)}
+.gf-header__logo{display:flex;align-items:center;gap:var(--space-2);color:#fff;font-size:18px;font-weight:600;white-space:nowrap}
+.gf-header__logo-icon{width:32px;height:32px;background:var(--color-primary);border-radius:var(--radius-default);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff}
+.gf-header__nav{display:flex;align-items:center;gap:4px}
+.gf-header__nav-item{padding:8px 16px;color:rgba(255,255,255,0.85);border-radius:var(--radius-small);font-size:var(--font-size-body);transition:background var(--transition-fast);cursor:pointer;white-space:nowrap}
+.gf-header__nav-item:hover{background:rgba(255,255,255,0.1)}
+.gf-header__nav-item--active{background:rgba(255,255,255,0.2);font-weight:600}
+.gf-header__right{display:flex;align-items:center;gap:var(--space-4)}
+.gf-header__icon-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.85);border-radius:var(--radius-small);transition:background var(--transition-fast)}
+.gf-header__icon-btn:hover{background:rgba(255,255,255,0.1)}
+.gf-header__user{display:flex;align-items:center;gap:var(--space-2);color:#fff;font-size:var(--font-size-body)}
+.gf-header__avatar{width:28px;height:28px;border-radius:50%;background:var(--color-primary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:var(--font-size-small);font-weight:600}
+
+/* ========== Sidebar ========== */
+.gf-sidebar{position:fixed;top:var(--header-height);left:0;bottom:0;z-index:900;width:var(--sidebar-width);background:#FFFFFF;border-right:1px solid var(--color-border-light);overflow-y:auto;overflow-x:hidden}
+.gf-sidebar__menu{padding:var(--space-2) 0}
+.gf-sidebar__section{padding:var(--space-3) var(--space-4) var(--space-2);font-size:12px;color:#8C8C8C;text-transform:uppercase;letter-spacing:.5px}
+.gf-sidebar__item{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:var(--space-3) var(--space-4);margin:0 var(--space-2);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;color:#595959;font-weight:500;white-space:nowrap}
+.gf-sidebar__item:hover{background:#E8E8E8;color:#595959}
+.gf-sidebar__item:active{background:#D9D9D9;color:#595959}
+.gf-sidebar__item--active{background:transparent;color:#2A6CDD;font-weight:600}
+.gf-sidebar__item-content{display:flex;align-items:center;gap:var(--space-3);flex:1}
+.gf-sidebar__item-content .icon{width:18px;height:18px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;color:currentColor;overflow:visible}
+.gf-sidebar__item-content .icon svg{width:100%;height:100%;overflow:visible}
+.gf-sidebar__item-arrow{width:12px;height:12px;flex-shrink:0;transition:transform 300ms ease-in-out;color:#595959}
+.gf-sidebar__item--active .gf-sidebar__item-arrow{color:#2A6CDD}
+.gf-sidebar__item--expanded .gf-sidebar__item-arrow{transform:rotate(180deg)}
+.gf-sidebar__submenu{overflow:hidden;max-height:0;transition:max-height 300ms ease-in-out;background:rgba(247,248,250,.4);margin:0 var(--space-2);border-radius:var(--radius-sm)}
+.gf-sidebar__submenu--expanded{max-height:500px}
+.gf-sidebar__submenu-item{display:flex;align-items:center;padding:var(--space-2) var(--space-4);color:#595959;font-weight:500;cursor:pointer;transition:all .2s;border-radius:var(--radius-sm);margin:var(--space-1) var(--space-2);font-size:13px;white-space:nowrap}
+.gf-sidebar__submenu-item:hover{color:#595959;background:rgba(247,248,250,.6)}
+.gf-sidebar__submenu-item--active{color:#2A6CDD;background:#EAF0FC;font-weight:600}
+
+/* ========== Main Content ========== */
+.gf-main{margin-left:var(--sidebar-width);margin-top:var(--header-height);min-height:calc(100vh - var(--header-height));background:var(--color-page-bg)}
+
+/* ========== Multi-Tab ========== */
+.gf-multitab{position:sticky;top:var(--header-height);z-index:800;height:var(--tab-height);background:#FFFFFF;border-bottom:1px solid var(--color-border-light);display:flex;align-items:flex-end;padding:0 var(--space-4);gap:var(--space-1);overflow-x:auto}
+.gf-multitab::-webkit-scrollbar{height:2px}
+.gf-multitab__item{flex-shrink:0;max-width:160px;display:flex;align-items:center;gap:var(--space-2);padding:7px var(--space-4) 8px;background:#F5F5F5;border:1px solid var(--color-border-light);border-bottom:1px solid transparent;border-radius:var(--radius-small) var(--radius-small) 0 0;cursor:pointer;font-size:13px;color:#595959;font-weight:500;transition:color var(--transition-fast),background var(--transition-fast);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;position:relative;margin-bottom:-1px}
+.gf-multitab__item:hover{color:var(--color-primary)}
+.gf-multitab__item--active{background:#FFFFFF;border-bottom:1px solid #FFFFFF;color:var(--color-primary);font-weight:600}
+.gf-multitab__close{width:14px;height:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:50%;margin-left:var(--space-1);color:#999;transition:background var(--transition-fast)}
+.gf-multitab__close:hover{background:var(--color-border-light);color:#333}
+.gf-multitab__close svg{width:10px;height:10px}
+
+/* ========== Page Content ========== */
+.gf-page-content{padding:var(--space-6)}
+.gf-page-title{font-size:var(--font-size-h6);font-weight:600;color:var(--color-text-title);margin-bottom:var(--space-4)}
+.gf-card{background:var(--color-card-bg);border-radius:var(--radius-default);box-shadow:var(--shadow-card);padding:var(--space-4);margin-bottom:var(--space-4)}
+.gf-breadcrumb{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-3);font-size:var(--font-size-body-sm);color:var(--color-text-secondary)}
+.gf-breadcrumb__link{color:var(--color-primary);cursor:pointer}
+.gf-breadcrumb__link:hover{text-decoration:underline}
+.gf-breadcrumb__sep{color:var(--color-text-muted)}
+
+/* ========== Filter ========== */
+.gf-filter{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 24px}
+.gf-filter__item{display:flex;flex-direction:column;gap:var(--space-2)}
+.gf-filter__item--span2{grid-column:span 2}
+.gf-filter__label{font-size:var(--font-size-body-sm);color:var(--color-text-secondary);font-weight:500;white-space:nowrap}
+.gf-filter__input,.gf-filter__select{width:100%;height:32px;padding:0 var(--space-3);border:1px solid var(--color-border);border-radius:var(--radius-small);font-size:var(--font-size-body-sm);color:var(--color-text-primary);background:#fff;transition:border-color var(--transition-fast),box-shadow var(--transition-fast);outline:none}
+.gf-filter__input[type="date"]{padding-right:30px;background-image:url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 14H3C2.73478 14 2.48043 13.8946 2.29289 13.7071C2.10536 13.5196 2 13.2652 2 13V4C2 3.73478 2.10536 3.48043 2.29289 3.29289C2.48043 3.10536 2.73478 3 3 3H5V1.5H6V3H10V1.5H11V3H13C13.2652 3 13.5196 3.10536 13.7071 3.29289C13.8946 3.48043 14 3.73478 14 4V13C14 13.2652 13.8946 13.5196 13.7071 13.7071C13.5196 13.8946 13.2652 14 13 14ZM3 7V13H13V7H3ZM3 4V6H13V4H11V5H10V4H6V5H5V4H3Z' fill='%23939599'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;background-size:16px 16px}
+.gf-filter__input[type="date"]::-webkit-calendar-picker-indicator{opacity:0;position:absolute;right:0;width:100%;height:100%;cursor:pointer}
+.gf-filter__input:focus,.gf-filter__select:focus{border-color:var(--color-primary);box-shadow:0 0 0 2px var(--color-primary-light)}
+.gf-filter__input::placeholder{color:var(--color-text-muted)}
+.gf-filter__select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23939599' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:28px;cursor:pointer}
+.gf-filter__date-range{display:flex;align-items:center;gap:var(--space-2)}
+.gf-filter__date-range .gf-filter__input{flex:1}
+.gf-filter__date-sep{color:var(--color-text-secondary);font-size:var(--font-size-body-sm);flex-shrink:0}
+.gf-filter__actions{display:flex;align-items:flex-end;gap:var(--space-2)}
+
+/* ========== Buttons ========== */
+.gf-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 var(--space-4);font-size:var(--font-size-body-sm);border-radius:var(--radius-small);font-weight:500;transition:all var(--transition-fast);white-space:nowrap;border:1px solid transparent}
+.gf-btn--primary{background:var(--color-primary);color:#fff;border-color:var(--color-primary)}
+.gf-btn--primary:hover{background:var(--color-primary-hover);border-color:var(--color-primary-hover)}
+.gf-btn--default{background:#fff;color:var(--color-text-primary);border-color:var(--color-border-light)}
+.gf-btn--default:hover{color:var(--color-primary);border-color:var(--color-primary)}
+.gf-btn--text{background:transparent;color:var(--color-primary);border-color:transparent;padding:0 8px}
+.gf-btn--text:hover{background:var(--color-primary-light)}
+.gf-btn--danger-text{background:transparent;color:#D12B2B;border-color:transparent;padding:0 8px}
+.gf-btn--danger-text:hover{background:#FAE6E6}
+.gf-btn--danger{background:#F5222D;color:#fff;border-color:#F5222D}
+.gf-btn--danger:hover{background:#D12B2B;border-color:#D12B2B}
+.gf-btn--sm{height:28px;padding:0 var(--space-3);font-size:var(--font-size-small)}
+.gf-btn--lg{height:40px;padding:0 var(--space-6);font-size:var(--font-size-body)}
+.gf-btn:disabled{opacity:0.5;cursor:not-allowed;pointer-events:none}
+
+/* ========== Toolbar ========== */
+.gf-toolbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--color-page-bg);border-bottom:1px solid var(--color-border)}
+.gf-toolbar__left{display:flex;align-items:center;gap:var(--space-3)}
+.gf-toolbar__right{font-size:var(--font-size-body-sm);color:var(--color-text-secondary)}
+.gf-toolbar__count{color:var(--color-primary);font-weight:600}
+
+/* ========== Table ========== */
+.gf-table-wrap{overflow-x:auto}
+.gf-table{width:100%;border-collapse:collapse;font-size:var(--font-size-body-sm);min-width:100%;table-layout:auto}
+.gf-table th,.gf-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--color-border-light);white-space:nowrap}
+.gf-table thead th{background:var(--color-table-header);font-weight:600;color:#434343;font-size:13px;padding:12px 12px;position:sticky;top:0;z-index:10}
+.gf-table tbody tr:nth-child(even){background:var(--color-table-stripe)}
+.gf-table tbody tr:nth-child(odd){background:#FFFFFF}
+.gf-table tbody tr:hover{background:var(--color-table-hover)}
+.gf-table__actions{position:sticky;right:0;z-index:5;display:flex;gap:var(--space-2);padding:0 12px}
+.gf-table__actions::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--color-border-light);z-index:1}
+.gf-table th:last-child,.gf-table td:last-child{position:sticky;right:0}
+.gf-table thead th:last-child{z-index:20;background:var(--color-table-header)}
+.gf-table tbody tr:nth-child(even) td:last-child{background:var(--color-table-stripe)}
+.gf-table tbody tr:nth-child(odd) td:last-child{background:#FFFFFF}
+.gf-table tbody tr:hover td:last-child{background:var(--color-table-hover)}
+.number-col,.number-col div:first-child{font-family:var(--font-number)}
+.gf-table__empty{padding:60px 0;text-align:center;color:var(--color-text-muted);font-size:var(--font-size-body)}
+
+/* Status Tags */
+.gf-tag{display:inline-flex;align-items:center;height:26px;padding:0 9px;font-size:var(--font-size-small);border-radius:3px;white-space:nowrap}
+.gf-tag--success{background:#f6ffed;color:#52c41a}
+.gf-tag--warning{background:#fffbe6;color:#faad14}
+.gf-tag--error{background:#fff2f0;color:#ff4d4f}
+.gf-tag--info{background:#e6f7ff;color:#2A6CDD}
+.gf-tag--default{background:#f5f5f5;color:#8c8c8c}
+.gf-link{color:var(--color-primary);cursor:pointer;transition:color var(--transition-fast)}
+.gf-link:hover{color:var(--color-primary-hover);text-decoration:underline}
+
+/* ========== Pagination ========== */
+.gf-pagination{display:flex;align-items:center;justify-content:flex-end;gap:var(--space-2);padding:var(--space-4) 0;font-size:var(--font-size-body-sm);flex-wrap:wrap}
+.gf-pagination__info{color:var(--color-text-secondary);margin-right:var(--space-4)}
+.gf-pagination__size-select{height:32px;padding:0 8px;border:1px solid var(--color-border-light);border-radius:var(--radius-small);font-size:var(--font-size-body-sm);margin-right:var(--space-2);outline:none}
+.gf-pagination__btn{min-width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--color-border-light);border-radius:var(--radius-small);background:#fff;color:var(--color-text-primary);font-size:var(--font-size-body-sm);transition:all var(--transition-fast);cursor:pointer}
+.gf-pagination__btn:hover{color:var(--color-primary);border-color:var(--color-primary)}
+.gf-pagination__btn--active{background:var(--color-primary);color:#fff;border-color:var(--color-primary)}
+.gf-pagination__btn--disabled{color:var(--color-text-muted);cursor:not-allowed;pointer-events:none}
+.gf-pagination__jump{display:flex;align-items:center;gap:4px;margin-left:var(--space-2);color:var(--color-text-secondary)}
+.gf-pagination__jump-input{width:48px;height:32px;text-align:center;border:1px solid var(--color-border-light);border-radius:var(--radius-small);outline:none}
+.gf-pagination__jump-input:focus{border-color:var(--color-primary)}
+
+/* ========== Modal ========== */
+.gf-modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;animation:fadeIn 200ms ease-in-out}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.gf-modal{background:#fff;border-radius:var(--radius-default);box-shadow:var(--shadow-modal);width:640px;max-height:80vh;display:flex;flex-direction:column;animation:slideUp 300ms ease-in-out}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.gf-modal--wide{width:800px}
+.gf-modal--xl{width:960px}
+.gf-modal__header{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) var(--space-6);border-bottom:1px solid var(--color-border)}
+.gf-modal__title{font-size:16px;font-weight:600;color:var(--color-text-title)}
+.gf-modal__close{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--color-text-secondary);border-radius:var(--radius-small);transition:all var(--transition-fast)}
+.gf-modal__close:hover{background:var(--color-page-bg);color:var(--color-text-primary)}
+.gf-modal__body{padding:var(--space-6);overflow-y:auto;flex:1}
+.gf-modal__footer{display:flex;align-items:center;justify-content:flex-end;gap:var(--space-3);padding:var(--space-4) var(--space-6);border-top:1px solid var(--color-border)}
+.gf-modal__section-title{font-size:var(--font-size-body);font-weight:600;color:var(--color-text-title);margin-bottom:var(--space-3);padding-bottom:var(--space-2);border-bottom:1px solid var(--color-border-light)}
+
+/* ========== Form ========== */
+.gf-form{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 24px}
+.gf-form__item{display:flex;flex-direction:column;gap:var(--space-2)}
+.gf-form__item--full{grid-column:1/-1}
+.gf-form__label{font-size:var(--font-size-body-sm);color:var(--color-text-secondary);font-weight:500}
+.gf-form__label--required::before{content:'* ';color:var(--color-error)}
+.gf-form__input,.gf-form__textarea,.gf-form__select{width:100%;padding:6px var(--space-3);border:1px solid var(--color-border);border-radius:var(--radius-small);font-size:var(--font-size-body-sm);color:var(--color-text-primary);outline:none;transition:border-color var(--transition-fast),background var(--transition-fast);background:#fff}
+.gf-form__input[type="date"]{padding-right:30px;background-image:url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 14H3C2.73478 14 2.48043 13.8946 2.29289 13.7071C2.10536 13.5196 2 13.2652 2 13V4C2 3.73478 2.10536 3.48043 2.29289 3.29289C2.48043 3.10536 2.73478 3 3 3H5V1.5H6V3H10V1.5H11V3H13C13.2652 3 13.5196 3.10536 13.7071 3.29289C13.8946 3.48043 14 3.73478 14 4V13C14 13.2652 13.8946 13.5196 13.7071 13.7071C13.5196 13.8946 13.2652 14 13 14ZM3 7V13H13V7H3ZM3 4V6H13V4H11V5H10V4H6V5H5V4H3Z' fill='%23939599'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;background-size:16px 16px}
+.gf-form__input[type="date"]::-webkit-calendar-picker-indicator{opacity:0;position:absolute;right:0;width:100%;height:100%;cursor:pointer}
+.gf-form__input:focus,.gf-form__textarea:focus,.gf-form__select:focus{border-color:var(--color-primary);box-shadow:0 0 0 2px var(--color-primary-light)}
+.gf-form__input:disabled,.gf-form__textarea:disabled,.gf-form__select:disabled{background:#f5f5f5;color:var(--color-text-muted)}
+.gf-form__textarea{resize:vertical;min-height:80px}
+
+/* ========== Approval Detail ========== */
+.gf-detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border:1px solid var(--color-border-light);border-radius:var(--radius-small);margin-bottom:var(--space-4)}
+.gf-detail-grid__item{display:flex;border-bottom:1px solid var(--color-border);padding:10px 12px;font-size:var(--font-size-body-sm)}
+.gf-detail-grid__item:nth-last-child(-n+2):nth-child(odd):last-child,.gf-detail-grid__item:last-child{border-bottom:none}
+.gf-detail-grid__label{color:var(--color-text-secondary);font-weight:500;min-width:130px;flex-shrink:0;white-space:nowrap}
+.gf-detail-grid__value{color:var(--color-text-primary);flex:1;word-break:break-all}
+.gf-detail-grid__item--full{grid-column:1/-1}
+
+/* ========== Multi-select ========== */
+.gf-multi-select{position:relative}
+.gf-multi-select__trigger{width:100%;height:32px;padding:0 28px 0 var(--space-3);border:1px solid var(--color-border);border-radius:var(--radius-small);font-size:var(--font-size-body-sm);color:var(--color-text-primary);background:#fff;display:flex;align-items:center;cursor:pointer;transition:border-color var(--transition-fast);overflow:hidden;white-space:nowrap;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23939599' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.gf-multi-select__trigger--focus{border-color:var(--color-primary);box-shadow:0 0 0 2px var(--color-primary-light)}
+.gf-multi-select__placeholder{color:var(--color-text-muted)}
+.gf-multi-select__dropdown{position:absolute;top:36px;left:0;right:0;z-index:100;background:#fff;border:1px solid var(--color-border-light);border-radius:var(--radius-default);box-shadow:var(--shadow-dropdown);max-height:200px;overflow-y:auto;display:none}
+.gf-multi-select__dropdown--open{display:block}
+.gf-multi-select__option{padding:8px 12px;font-size:var(--font-size-body-sm);cursor:pointer;display:flex;align-items:center;gap:var(--space-2);transition:background var(--transition-fast)}
+.gf-multi-select__option:hover{background:var(--color-page-bg)}
+.gf-multi-select__checkbox{width:14px;height:14px;border:1px solid var(--color-border-light);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all var(--transition-fast)}
+.gf-multi-select__checkbox--checked{background:var(--color-primary);border-color:var(--color-primary)}
+.gf-multi-select__checkbox--checked::after{content:'';width:4px;height:8px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg);margin-top:-2px}
+
+/* ========== Alert ========== */
+.gf-alert{display:flex;align-items:center;gap:var(--space-2);padding:12px 16px;border-radius:var(--radius-small);font-size:var(--font-size-body-sm);margin-bottom:var(--space-4)}
+.gf-alert svg{flex-shrink:0;overflow:visible}
+.gf-alert--info{background:rgba(24,144,255,0.08);border:1px solid rgba(24,144,255,0.3)}
+.gf-alert--warning{background:#FFF0E0;border:1px solid rgba(250,140,22,0.3)}
+.gf-alert--error{background:#FFF2F0;border:1px solid #FFCCC7}
+
+/* ========== Toast Notification ========== */
+.gf-toast-container{position:fixed;top:80px;right:24px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.gf-toast{display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:var(--radius-default);box-shadow:0 4px 16px rgba(0,0,0,0.15);font-size:var(--font-size-body);animation:toastIn 300ms ease-in-out;min-width:280px;max-width:420px}
+@keyframes toastIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes toastOut{from{transform:translateX(0);opacity:1}to{transform:translateX(100%);opacity:0}}
+.gf-toast--success{background:#F6FFED;border:1px solid #B7EB8F;color:#389E0D}
+.gf-toast--error{background:#FFF2F0;border:1px solid #FFCCC7;color:#CF1322}
+.gf-toast--warning{background:#FFFBE6;border:1px solid #FFE58F;color:#D48806}
+.gf-toast--info{background:#E6F7FF;border:1px solid #91D5FF;color:#096DD9}
+.gf-toast__icon{flex-shrink:0;width:18px;height:18px}
+.gf-toast__content{flex:1;line-height:1.4}
+
+/* ========== Page visibility ========== */
+.gf-page{display:none}
+.gf-page--active{display:block}
+
+/* ========== Process Step Indicator ========== */
+.gf-process-steps{display:flex;align-items:center;margin-bottom:var(--space-4);padding:16px 0}
+.gf-process-step{display:flex;align-items:center;gap:6px;font-size:var(--font-size-body-sm)}
+.gf-process-step__dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff}
+.gf-process-step__dot--active{background:var(--color-primary)}
+.gf-process-step__dot--done{background:var(--color-success)}
+.gf-process-step__dot--pending{background:var(--color-text-muted)}
+.gf-process-step__line{width:40px;height:2px;background:var(--color-border-light);margin:0 4px}
+.gf-process-step__line--done{background:var(--color-success)}
+.gf-process-step__label{color:var(--color-text-secondary)}
+.gf-process-step__label--active{color:var(--color-primary);font-weight:600}
+
+/* ========== Responsive ========== */
+@media(max-width:1200px){.gf-filter{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.gf-filter{grid-template-columns:repeat(1,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- ==================== Top Header ==================== -->
+<header class="gf-header">
+  <div class="gf-header__left">
+    <div class="gf-header__logo">
+      <div class="gf-header__logo-icon">GF</div>
+      证金业务平台
+    </div>
+    <nav class="gf-header__nav">
+      <span class="gf-header__nav-item">首页</span>
+      <span class="gf-header__nav-item gf-header__nav-item--active">营销专区</span>
+      <span class="gf-header__nav-item">数据统计</span>
+      <span class="gf-header__nav-item">系统管理</span>
+    </nav>
+  </div>
+  <div class="gf-header__right">
+    <button class="gf-header__icon-btn" title="消息">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </button>
+    <div class="gf-header__user">
+      <div class="gf-header__avatar">陈</div>
+      <span>陈凯宁</span>
+    </div>
+  </div>
+</header>
+
+<!-- ==================== Sidebar ==================== -->
+<aside class="gf-sidebar">
+  <div class="gf-sidebar__menu">
+    <div class="gf-sidebar__item gf-sidebar__item--active gf-sidebar__item--expanded" onclick="toggleSubmenu(this)">
+      <div class="gf-sidebar__item-content">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        <span>营销专区</span>
+      </div>
+      <svg class="gf-sidebar__item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="gf-sidebar__submenu gf-sidebar__submenu--expanded">
+      <div class="gf-sidebar__section">睿享融通</div>
+      <div class="gf-sidebar__submenu-item" onclick="switchToTab('new-apply','新增申请',this)">新增申请</div>
+      <div class="gf-sidebar__submenu-item gf-sidebar__submenu-item--active" onclick="switchToTab('service-manage','服务管理',this)">服务管理</div>
+      <div class="gf-sidebar__submenu-item" onclick="switchToTab('adjust-apply','调整服务申请',this)">调整服务申请</div>
+      <div class="gf-sidebar__section">私享会</div>
+      <div class="gf-sidebar__submenu-item" onclick="switchToTab('private-meeting','私享会管理',this)">私享会管理</div>
+    </div>
+    <div class="gf-sidebar__item" onclick="toggleSubmenu(this)">
+      <div class="gf-sidebar__item-content">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <span>数据统计</span>
+      </div>
+      <svg class="gf-sidebar__item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="gf-sidebar__submenu"></div>
+    <div class="gf-sidebar__item" onclick="toggleSubmenu(this)">
+      <div class="gf-sidebar__item-content">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span>系统管理</span>
+      </div>
+      <svg class="gf-sidebar__item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="gf-sidebar__submenu"></div>
+  </div>
+</aside>
+
+<!-- ==================== Toast Container ==================== -->
+<div class="gf-toast-container" id="toastContainer"></div>
+
+<!-- ==================== Main Content ==================== -->
+<main class="gf-main">
+
+  <!-- Multi-Tab Navigation -->
+  <div class="gf-multitab" id="multitab">
+    <div class="gf-multitab__item gf-multitab__item--active" data-tab="service-manage" onclick="activateTab('service-manage')">
+      <span>服务管理</span>
+      <span class="gf-multitab__close" onclick="event.stopPropagation();closeTab('service-manage')"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M6 18L18 6"/></svg></span>
+    </div>
+  </div>
+
+  <!-- ==================== Page 1: 新增申请 ==================== -->
+  <div class="gf-page" id="page-new-apply">
+    <div class="gf-page-content">
+      <div class="gf-breadcrumb">
+        <span class="gf-breadcrumb__link">营销专区</span><span class="gf-breadcrumb__sep">/</span>
+        <span class="gf-breadcrumb__link">睿享融通</span><span class="gf-breadcrumb__sep">/</span>
+        <span style="color:var(--color-text-title);font-weight:500;">新增申请</span>
+      </div>
+      <h1 class="gf-page-title">新增申请</h1>
+      <div class="gf-card">
+        <div class="gf-filter">
+          <div class="gf-filter__item"><label class="gf-filter__label">申请状态：</label>
+            <div class="gf-multi-select" id="msNewApplyStatus">
+              <div class="gf-multi-select__trigger" onclick="toggleMultiSelect('msNewApplyStatus')"><span class="gf-multi-select__placeholder">请选择</span></div>
+              <div class="gf-multi-select__dropdown">
+                <div class="gf-multi-select__option" data-value="待审批" onclick="toggleOption(this,'msNewApplyStatus')"><span class="gf-multi-select__checkbox"></span>待审批</div>
+                <div class="gf-multi-select__option" data-value="待复核" onclick="toggleOption(this,'msNewApplyStatus')"><span class="gf-multi-select__checkbox"></span>待复核</div>
+                <div class="gf-multi-select__option" data-value="待处理" onclick="toggleOption(this,'msNewApplyStatus')"><span class="gf-multi-select__checkbox"></span>待处理</div>
+                <div class="gf-multi-select__option" data-value="申请成功" onclick="toggleOption(this,'msNewApplyStatus')"><span class="gf-multi-select__checkbox"></span>申请成功</div>
+                <div class="gf-multi-select__option" data-value="申请失败" onclick="toggleOption(this,'msNewApplyStatus')"><span class="gf-multi-select__checkbox"></span>申请失败</div>
+              </div>
+            </div>
+          </div>
+          <div class="gf-filter__item"><label class="gf-filter__label">申请资格客户编号：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fNewQualCustNo"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">申请资格客户名称：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fNewQualCustName"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">补贴客户编号：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fNewSubsidyNo"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">补贴客户名称：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fNewSubsidyName"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">服务编号：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fNewServiceNo"></div>
+          <div class="gf-filter__item gf-filter__item--span2"><label class="gf-filter__label">发起日期：</label><div class="gf-filter__date-range"><input class="gf-filter__input" type="date" id="fNewDateFrom"><span class="gf-filter__date-sep">至</span><input class="gf-filter__input" type="date" id="fNewDateTo"></div></div>
+          <div class="gf-filter__item" style="flex-direction:row;align-items:flex-end;"><div class="gf-filter__actions"><button class="gf-btn gf-btn--primary" onclick="filterNewApply()">查询</button><button class="gf-btn gf-btn--default" onclick="resetNewApplyFilter()">重置</button></div></div>
+        </div>
+      </div>
+      <div class="gf-card" style="padding:0;">
+        <div class="gf-toolbar">
+          <div class="gf-toolbar__left"><button class="gf-btn gf-btn--primary" onclick="openNewApplyModal()">新增</button></div>
+          <div class="gf-toolbar__right">共 <span class="gf-toolbar__count" id="newApplyCount">0</span> 条记录</div>
+        </div>
+        <div class="gf-table-wrap">
+          <table class="gf-table">
+            <thead><tr>
+              <th class="number-col">申请编号</th><th class="number-col">服务编号</th><th>申请状态</th>
+              <th class="number-col">申请资格客户编号</th><th>申请资格客户名称</th><th>申请资格客户所在机构</th>
+              <th class="number-col">补贴客户编号</th><th>补贴客户名称</th><th>补贴客户所在机构</th>
+              <th class="number-col">补贴金额</th><th class="number-col">最多可补贴期数</th>
+              <th class="number-col">投顾服务服务代码</th><th>投顾服务服务名称</th><th>投顾人员</th>
+              <th class="number-col">申请服务开始日期</th><th class="number-col">申请服务到期日期</th><th>申请说明</th>
+              <th>流程标题</th><th class="number-col">申请日期</th><th class="number-col">录入时间</th><th>录入人</th>
+              <th class="number-col">最近更新时间</th><th>最近更新人</th><th>操作栏</th>
+            </tr></thead>
+            <tbody id="newApplyTableBody"></tbody>
+          </table>
+        </div>
+        <div class="gf-pagination" id="newApplyPagination"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Page 2: 服务管理 ==================== -->
+  <div class="gf-page gf-page--active" id="page-service-manage">
+    <div class="gf-page-content">
+      <div class="gf-breadcrumb">
+        <span class="gf-breadcrumb__link">营销专区</span><span class="gf-breadcrumb__sep">/</span>
+        <span class="gf-breadcrumb__link">睿享融通</span><span class="gf-breadcrumb__sep">/</span>
+        <span style="color:var(--color-text-title);font-weight:500;">服务管理</span>
+      </div>
+      <h1 class="gf-page-title">服务管理</h1>
+      <div class="gf-card">
+        <div class="gf-filter">
+          <div class="gf-filter__item"><label class="gf-filter__label">服务状态：</label>
+            <div class="gf-multi-select" id="msServiceStatus">
+              <div class="gf-multi-select__trigger" onclick="toggleMultiSelect('msServiceStatus')"><span class="gf-multi-select__placeholder">请选择</span></div>
+              <div class="gf-multi-select__dropdown">
+                <div class="gf-multi-select__option" data-value="正常" onclick="toggleOption(this,'msServiceStatus')"><span class="gf-multi-select__checkbox"></span>正常</div>
+                <div class="gf-multi-select__option" data-value="已过期" onclick="toggleOption(this,'msServiceStatus')"><span class="gf-multi-select__checkbox"></span>已过期</div>
+                <div class="gf-multi-select__option" data-value="已取消" onclick="toggleOption(this,'msServiceStatus')"><span class="gf-multi-select__checkbox"></span>已取消</div>
+                <div class="gf-multi-select__option" data-value="异常" onclick="toggleOption(this,'msServiceStatus')"><span class="gf-multi-select__checkbox"></span>异常</div>
+              </div>
+            </div>
+          </div>
+          <div class="gf-filter__item"><label class="gf-filter__label">申请资格客户编号：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fSvcQualNo"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">申请资格客户名称：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fSvcQualName"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">服务补贴客户编号：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fSvcSubsidyNo"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">服务补贴客户名称：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fSvcSubsidyName"></div>
+          <div class="gf-filter__item gf-filter__item--span2"><label class="gf-filter__label">最早服务开始日期：</label><div class="gf-filter__date-range"><input class="gf-filter__input" type="date" id="fSvcEarliestFrom"><span class="gf-filter__date-sep">至</span><input class="gf-filter__input" type="date" id="fSvcEarliestTo"></div></div>
+          <div class="gf-filter__item gf-filter__item--span2"><label class="gf-filter__label">当期服务开始日期：</label><div class="gf-filter__date-range"><input class="gf-filter__input" type="date" id="fSvcCurrentFrom"><span class="gf-filter__date-sep">至</span><input class="gf-filter__input" type="date" id="fSvcCurrentTo"></div></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">投顾人员：</label><input class="gf-filter__input" type="text" placeholder="请输入姓名" id="fSvcAdvisor"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">服务编号：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fSvcServiceNo"></div>
+          <div class="gf-filter__item" style="flex-direction:row;align-items:flex-end;"><div class="gf-filter__actions"><button class="gf-btn gf-btn--primary" onclick="filterService()">查询</button><button class="gf-btn gf-btn--default" onclick="resetServiceFilter()">重置</button></div></div>
+        </div>
+      </div>
+      <div class="gf-card" style="padding:0;">
+        <div class="gf-toolbar">
+          <div class="gf-toolbar__left"><button class="gf-btn gf-btn--primary" onclick="handleExport()">导出</button></div>
+          <div class="gf-toolbar__right">共 <span class="gf-toolbar__count" id="serviceCount">0</span> 条记录</div>
+        </div>
+        <div class="gf-table-wrap">
+          <table class="gf-table">
+            <thead><tr>
+              <th class="number-col">服务编号</th><th>服务状态</th><th class="number-col">申请资格客户编号</th><th>申请资格客户名称</th><th>申请资格客户所在机构</th>
+              <th class="number-col">补贴客户编号</th><th>补贴客户名称</th><th>补贴客户所在机构</th><th class="number-col">当前补贴期数</th><th class="number-col">最多可补贴期数</th>
+              <th class="number-col">补贴金额</th><th class="number-col">最早服务开始日期</th><th class="number-col">当期服务开始日期</th><th class="number-col">当期服务到期日期</th>
+              <th class="number-col">当期已产生净利息收入</th><th class="number-col">当期折算补贴金额</th><th>当期净利息收入预计是否覆盖费用</th>
+              <th class="number-col">投顾服务服务代码</th><th>投顾服务服务名称</th><th>投顾人员</th><th>流程标题</th>
+              <th class="number-col">录入时间</th><th>录入人</th><th class="number-col">最近更新时间</th><th>最近更新人</th><th>操作栏</th>
+            </tr></thead>
+            <tbody id="serviceTableBody"></tbody>
+          </table>
+        </div>
+        <div class="gf-pagination" id="servicePagination"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Page 3: 调整服务申请 ==================== -->
+  <div class="gf-page" id="page-adjust-apply">
+    <div class="gf-page-content">
+      <div class="gf-breadcrumb">
+        <span class="gf-breadcrumb__link">营销专区</span><span class="gf-breadcrumb__sep">/</span>
+        <span class="gf-breadcrumb__link">睿享融通</span><span class="gf-breadcrumb__sep">/</span>
+        <span style="color:var(--color-text-title);font-weight:500;">调整服务申请</span>
+      </div>
+      <h1 class="gf-page-title">调整服务申请</h1>
+      <div class="gf-card">
+        <div class="gf-filter">
+          <div class="gf-filter__item"><label class="gf-filter__label">申请状态：</label>
+            <div class="gf-multi-select" id="msAdjustStatus">
+              <div class="gf-multi-select__trigger" onclick="toggleMultiSelect('msAdjustStatus')"><span class="gf-multi-select__placeholder">请选择</span></div>
+              <div class="gf-multi-select__dropdown">
+                <div class="gf-multi-select__option" data-value="待审批" onclick="toggleOption(this,'msAdjustStatus')"><span class="gf-multi-select__checkbox"></span>待审批</div>
+                <div class="gf-multi-select__option" data-value="待复核" onclick="toggleOption(this,'msAdjustStatus')"><span class="gf-multi-select__checkbox"></span>待复核</div>
+                <div class="gf-multi-select__option" data-value="待处理" onclick="toggleOption(this,'msAdjustStatus')"><span class="gf-multi-select__checkbox"></span>待处理</div>
+                <div class="gf-multi-select__option" data-value="申请成功" onclick="toggleOption(this,'msAdjustStatus')"><span class="gf-multi-select__checkbox"></span>申请成功</div>
+                <div class="gf-multi-select__option" data-value="申请失败" onclick="toggleOption(this,'msAdjustStatus')"><span class="gf-multi-select__checkbox"></span>申请失败</div>
+              </div>
+            </div>
+          </div>
+          <div class="gf-filter__item"><label class="gf-filter__label">申请类型：</label><select class="gf-filter__select" id="fAdjustType"><option value="">全部</option><option value="新增">新增</option><option value="延期">延期</option><option value="取消">取消</option></select></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">申请编号：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fAdjustApplyNo"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">服务编号：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fAdjustServiceNo"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">申请资格客户编号：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fAdjustQualNo"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">申请资格客户名称：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fAdjustQualName"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">服务补贴客户编号：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fAdjustSubsidyNo"></div>
+          <div class="gf-filter__item"><label class="gf-filter__label">服务补贴客户名称：</label><input class="gf-filter__input" type="text" placeholder="请输入" id="fAdjustSubsidyName"></div>
+          <div class="gf-filter__item gf-filter__item--span2"><label class="gf-filter__label">发起日期：</label><div class="gf-filter__date-range"><input class="gf-filter__input" type="date" id="fAdjustDateFrom"><span class="gf-filter__date-sep">至</span><input class="gf-filter__input" type="date" id="fAdjustDateTo"></div></div>
+          <div class="gf-filter__item" style="flex-direction:row;align-items:flex-end;"><div class="gf-filter__actions"><button class="gf-btn gf-btn--primary" onclick="filterAdjust()">查询</button><button class="gf-btn gf-btn--default" onclick="resetAdjustFilter()">重置</button></div></div>
+        </div>
+      </div>
+      <div class="gf-card" style="padding:0;">
+        <div class="gf-toolbar">
+          <div class="gf-toolbar__left"></div>
+          <div class="gf-toolbar__right">共 <span class="gf-toolbar__count" id="adjustCount">0</span> 条记录</div>
+        </div>
+        <div class="gf-table-wrap">
+          <table class="gf-table">
+            <thead><tr>
+              <th class="number-col">申请编号</th><th class="number-col">服务编号</th><th>申请类型</th><th>申请状态</th>
+              <th class="number-col">申请资格客户编号</th><th>申请资格客户名称</th><th class="number-col">补贴客户编号</th><th>补贴客户名称</th>
+              <th class="number-col">补贴金额</th><th class="number-col">申请服务开始日期</th><th class="number-col">申请服务到期日期</th><th>申请说明</th>
+              <th>流程标题</th><th class="number-col">申请日期</th><th class="number-col">录入时间</th><th>录入人</th>
+              <th class="number-col">最近更新时间</th><th>最近更新人</th><th>操作栏</th>
+            </tr></thead>
+            <tbody id="adjustTableBody"></tbody>
+          </table>
+        </div>
+        <div class="gf-pagination" id="adjustPagination"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ==================== Modal: 新增申请 ==================== -->
+<div class="gf-modal-overlay" id="newApplyModal" style="display:none;" onclick="if(event.target===this)closeNewApplyModal()">
+  <div class="gf-modal gf-modal--wide">
+    <div class="gf-modal__header"><span class="gf-modal__title">新增睿享融通申请</span><button class="gf-modal__close" onclick="closeNewApplyModal()">&times;</button></div>
+    <div class="gf-modal__body">
+      <div class="gf-form">
+        <div class="gf-form__item"><label class="gf-form__label gf-form__label--required">申请资格客户编号：</label><input class="gf-form__input" id="naQualNo" placeholder="请输入客户编号"></div>
+        <div class="gf-form__item"><label class="gf-form__label gf-form__label--required">申请资格客户名称：</label><input class="gf-form__input" id="naQualName" placeholder="请输入客户名称"></div>
+        <div class="gf-form__item"><label class="gf-form__label">申请资格客户所在机构：</label><input class="gf-form__input" id="naQualOrg" placeholder="请输入"></div>
+        <div class="gf-form__item"><label class="gf-form__label gf-form__label--required">补贴客户编号：</label><input class="gf-form__input" id="naSubsidyNo" placeholder="请输入补贴客户编号"></div>
+        <div class="gf-form__item"><label class="gf-form__label gf-form__label--required">补贴客户名称：</label><input class="gf-form__input" id="naSubsidyName" placeholder="请输入补贴客户名称"></div>
+        <div class="gf-form__item"><label class="gf-form__label">补贴客户所在机构：</label><input class="gf-form__input" id="naSubsidyOrg" placeholder="请输入"></div>
+        <div class="gf-form__item"><label class="gf-form__label gf-form__label--required">补贴金额：</label><input class="gf-form__input" id="naAmount" type="text" placeholder="请输入金额"></div>
+        <div class="gf-form__item"><label class="gf-form__label gf-form__label--required">最多可补贴期数：</label><select class="gf-form__select" id="naMaxPeriod"><option value="">请选择</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+        <div class="gf-form__item"><label class="gf-form__label gf-form__label--required">投顾服务服务代码：</label><select class="gf-form__select" id="naServiceCode" onchange="onServiceCodeChange()"><option value="">请选择</option><option value="TG001">TG001</option><option value="TG002">TG002</option><option value="TG003">TG003</option><option value="TG004">TG004</option></select></div>
+        <div class="gf-form__item"><label class="gf-form__label">投顾服务服务名称：</label><input class="gf-form__input" id="naServiceName" placeholder="自动填充" disabled></div>
+        <div class="gf-form__item"><label class="gf-form__label gf-form__label--required">申请服务开始日期：</label><input class="gf-form__input" type="date" id="naStartDate"></div>
+        <div class="gf-form__item"><label class="gf-form__label gf-form__label--required">申请服务到期日期：</label><input class="gf-form__input" type="date" id="naEndDate"></div>
+        <div class="gf-form__item gf-form__item--full"><label class="gf-form__label">申请说明：</label><textarea class="gf-form__textarea" id="naDesc" placeholder="请输入申请说明（300字以内）" maxlength="300"></textarea></div>
+      </div>
+    </div>
+    <div class="gf-modal__footer">
+      <button class="gf-btn gf-btn--default" onclick="closeNewApplyModal()">取消</button>
+      <button class="gf-btn gf-btn--primary" onclick="submitNewApply()">提交</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Modal: 延期 ==================== -->
+<div class="gf-modal-overlay" id="extendModal" style="display:none;" onclick="if(event.target===this)closeExtendModal()">
+  <div class="gf-modal">
+    <div class="gf-modal__header"><span class="gf-modal__title">睿享融通服务延期</span><button class="gf-modal__close" onclick="closeExtendModal()">&times;</button></div>
+    <div class="gf-modal__body">
+      <div class="gf-form">
+        <div class="gf-form__item"><label class="gf-form__label">服务编号：</label><input class="gf-form__input" id="extServiceNo" disabled></div>
+        <div class="gf-form__item"><label class="gf-form__label">申请资格客户编号：</label><input class="gf-form__input" id="extQualNo" disabled></div>
+        <div class="gf-form__item"><label class="gf-form__label">申请资格客户名称：</label><input class="gf-form__input" id="extQualName" disabled></div>
+        <div class="gf-form__item"><label class="gf-form__label">补贴客户编号：</label><input class="gf-form__input" id="extSubsidyNo" disabled></div>
+        <div class="gf-form__item"><label class="gf-form__label">补贴客户名称：</label><input class="gf-form__input" id="extSubsidyName" disabled></div>
+        <div class="gf-form__item"><label class="gf-form__label">补贴金额：</label><input class="gf-form__input" id="extAmount" disabled></div>
+        <div class="gf-form__item"><label class="gf-form__label">申请服务开始日期：</label><input class="gf-form__input" id="extStartDate" disabled></div>
+        <div class="gf-form__item"><label class="gf-form__label">申请服务到期日期：</label><input class="gf-form__input" id="extEndDate" disabled></div>
+        <div class="gf-form__item gf-form__item--full"><label class="gf-form__label">申请说明：</label><textarea class="gf-form__textarea" id="extDesc" placeholder="请输入申请说明（300字以内）" maxlength="300"></textarea></div>
+      </div>
+    </div>
+    <div class="gf-modal__footer">
+      <button class="gf-btn gf-btn--default" onclick="closeExtendModal()">取消</button>
+      <button class="gf-btn gf-btn--primary" onclick="submitExtend()">提交</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Modal: 取消 ==================== -->
+<div class="gf-modal-overlay" id="cancelModal" style="display:none;" onclick="if(event.target===this)closeCancelModal()">
+  <div class="gf-modal">
+    <div class="gf-modal__header"><span class="gf-modal__title">睿享融通服务取消</span><button class="gf-modal__close" onclick="closeCancelModal()">&times;</button></div>
+    <div class="gf-modal__body">
+      <div class="gf-alert gf-alert--warning">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><path d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z" fill="#E46205"/><path fill-rule="evenodd" clip-rule="evenodd" d="M8.50358 9.88625C8.71835 9.88625 8.89247 10.0604 8.89247 10.2751V11.2863C8.89247 11.501 8.71835 11.6751 8.50358 11.6751H7.49247C7.27769 11.6751 7.10358 11.501 7.10358 11.2863V10.2751C7.10358 10.0604 7.27769 9.88625 7.49247 9.88625H8.50358ZM8.50358 4.17462C8.71835 4.17462 8.89247 4.34873 8.89247 4.56351V8.65477C8.89247 8.86955 8.71835 9.04366 8.50358 9.04366H7.49247C7.27769 9.04366 7.10358 8.86955 7.10358 8.65477V4.56351C7.10358 4.34873 7.27769 4.17462 7.49247 4.17462H8.50358Z" fill="white"/></svg>
+        <span>取消服务后补贴将停止发放，该操作不可撤销，请谨慎操作。</span>
+      </div>
+      <div class="gf-form">
+        <div class="gf-form__item"><label class="gf-form__label">服务编号：</label><input class="gf-form__input" id="cancelServiceNo" disabled></div>
+        <div class="gf-form__item"><label class="gf-form__label">申请资格客户名称：</label><input class="gf-form__input" id="cancelQualName" disabled></div>
+        <div class="gf-form__item"><label class="gf-form__label">补贴客户名称：</label><input class="gf-form__input" id="cancelSubsidyName" disabled></div>
+        <div class="gf-form__item"><label class="gf-form__label">补贴金额：</label><input class="gf-form__input" id="cancelAmount" disabled></div>
+        <div class="gf-form__item gf-form__item--full"><label class="gf-form__label gf-form__label--required">取消原因：</label><textarea class="gf-form__textarea" id="cancelReason" placeholder="请输入取消原因（300字以内）" maxlength="300"></textarea></div>
+      </div>
+    </div>
+    <div class="gf-modal__footer">
+      <button class="gf-btn gf-btn--default" onclick="closeCancelModal()">取消</button>
+      <button class="gf-btn gf-btn--danger" onclick="submitCancel()">确认取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Modal: 初审 ==================== -->
+<div class="gf-modal-overlay" id="firstReviewModal" style="display:none;" onclick="if(event.target===this)closeFirstReviewModal()">
+  <div class="gf-modal gf-modal--wide">
+    <div class="gf-modal__header"><span class="gf-modal__title">调整服务申请 — 初审</span><button class="gf-modal__close" onclick="closeFirstReviewModal()">&times;</button></div>
+    <div class="gf-modal__body">
+      <div class="gf-process-steps" id="reviewProcessSteps"></div>
+      <div class="gf-detail-grid" id="firstReviewDetail"></div>
+      <div class="gf-form__item gf-form__item--full" style="margin-top:16px;">
+        <label class="gf-form__label gf-form__label--required">审批意见：</label>
+        <textarea class="gf-form__textarea" id="firstReviewOpinion" placeholder="请输入审批意见（300字以内）" maxlength="300" style="min-height:100px;"></textarea>
+      </div>
+    </div>
+    <div class="gf-modal__footer">
+      <button class="gf-btn gf-btn--danger" onclick="submitFirstReview('驳回')">驳回</button>
+      <button class="gf-btn gf-btn--primary" onclick="submitFirstReview('通过')">通过</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Modal: 复审-延期 ==================== -->
+<div class="gf-modal-overlay" id="reReviewExtendModal" style="display:none;" onclick="if(event.target===this)closeReReviewExtendModal()">
+  <div class="gf-modal gf-modal--wide">
+    <div class="gf-modal__header"><span class="gf-modal__title">调整服务申请 — 复审（延期）</span><button class="gf-modal__close" onclick="closeReReviewExtendModal()">&times;</button></div>
+    <div class="gf-modal__body">
+      <div class="gf-detail-grid" id="reReviewExtendDetail"></div>
+      <div class="gf-form__item gf-form__item--full" style="margin-top:16px;"><label class="gf-form__label">初审意见：</label><div style="padding:10px 12px;background:#FFF0E0;border-radius:2px;font-size:13px;color:#595959;" id="reReviewExtendFirstOpinion"></div></div>
+      <div class="gf-form__item gf-form__item--full" style="margin-top:16px;"><label class="gf-form__label gf-form__label--required">复审意见：</label><textarea class="gf-form__textarea" id="reReviewExtendOpinion" placeholder="请输入复审意见（300字以内）" maxlength="300" style="min-height:100px;"></textarea></div>
+    </div>
+    <div class="gf-modal__footer">
+      <button class="gf-btn gf-btn--danger" onclick="submitReReview('reReviewExtend','驳回')">驳回</button>
+      <button class="gf-btn gf-btn--primary" onclick="submitReReview('reReviewExtend','通过')">通过</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Modal: 复审-取消 ==================== -->
+<div class="gf-modal-overlay" id="reReviewCancelModal" style="display:none;" onclick="if(event.target===this)closeReReviewCancelModal()">
+  <div class="gf-modal gf-modal--wide">
+    <div class="gf-modal__header"><span class="gf-modal__title">调整服务申请 — 复审（取消）</span><button class="gf-modal__close" onclick="closeReReviewCancelModal()">&times;</button></div>
+    <div class="gf-modal__body">
+      <div class="gf-detail-grid" id="reReviewCancelDetail"></div>
+      <div class="gf-form__item gf-form__item--full" style="margin-top:16px;"><label class="gf-form__label">初审意见：</label><div style="padding:10px 12px;background:#FFF0E0;border-radius:2px;font-size:13px;color:#595959;" id="reReviewCancelFirstOpinion"></div></div>
+      <div class="gf-form__item gf-form__item--full" style="margin-top:16px;"><label class="gf-form__label gf-form__label--required">复审意见：</label><textarea class="gf-form__textarea" id="reReviewCancelOpinion" placeholder="请输入复审意见（300字以内）" maxlength="300" style="min-height:100px;"></textarea></div>
+    </div>
+    <div class="gf-modal__footer">
+      <button class="gf-btn gf-btn--danger" onclick="submitReReview('reReviewCancel','驳回')">驳回</button>
+      <button class="gf-btn gf-btn--primary" onclick="submitReReview('reReviewCancel','通过')">通过</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Modal: 查看详情（通用） ==================== -->
+<div class="gf-modal-overlay" id="detailModal" style="display:none;" onclick="if(event.target===this)closeDetailModal()">
+  <div class="gf-modal gf-modal--wide">
+    <div class="gf-modal__header"><span class="gf-modal__title" id="detailModalTitle">查看详情</span><button class="gf-modal__close" onclick="closeDetailModal()">&times;</button></div>
+    <div class="gf-modal__body"><div class="gf-detail-grid" id="detailGridContent"></div></div>
+    <div class="gf-modal__footer"><button class="gf-btn gf-btn--default" onclick="closeDetailModal()">关闭</button></div>
+  </div>
+</div>
+
+<script>
+// ========== GLOBAL DATA STORE (shared across all pages) ==========
+
+const serviceMap = {
+  'TG001':'智投精选一号','TG002':'稳健增长组合','TG003':'进取优选策略','TG004':'平衡配置计划'
+};
+const advisorMap = {'TG001':'王经理','TG002':'赵经理','TG003':'陈经理','TG004':'刘经理'};
+
+function genApplyNo(){ return 'RXRTSQ' + String(Date.now()).slice(-6) + String(Math.floor(Math.random()*100)).padStart(2,'0'); }
+function genServiceNo(){ return 'RXRTFW' + String(Date.now()).slice(-6) + String(Math.floor(Math.random()*100)).padStart(2,'0'); }
+function now(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0'); }
+function today(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+// ========== Initial Mock Data ==========
+const newApplyData = [
+  { applyNo:'RXRTSQ00000006', serviceNo:'', applyType:'新增', applyStatus:'待审批', qualCustNo:'1000000912', qualCustName:'秦二十一', qualCustOrg:'广州分公司/天河营业部', subsidyCustNo:'2000000934', subsidyCustName:'尤二十二', subsidyCustOrg:'广州分公司/天河营业部', amount:'60,000.00', maxPeriod:'4', serviceCode:'TG001', serviceName:'智投精选一号', advisor:'王经理', applyStart:'2026-04-01', applyEnd:'2026-06-30', applyDesc:'新客户申请睿享融通服务', flowTitle:'睿享融通新增申请-BPM流程', applyDate:'2026-03-15', entryTime:'2026-03-15 09:00:00', entryBy:'陈凯宁', updateTime:'2026-03-15 09:00:00', updateBy:'陈凯宁' },
+  { applyNo:'RXRTSQ00000007', serviceNo:'', applyType:'新增', applyStatus:'待复核', qualCustNo:'1000000923', qualCustName:'许二十三', qualCustOrg:'深圳分公司/福田营业部', subsidyCustNo:'2000000945', subsidyCustName:'何二十四', subsidyCustOrg:'深圳分公司/福田营业部', amount:'80,000.00', maxPeriod:'4', serviceCode:'TG002', serviceName:'稳健增长组合', advisor:'赵经理', applyStart:'2026-04-01', applyEnd:'2026-06-30', applyDesc:'客户资产达标，申请睿享融通', flowTitle:'睿享融通新增申请-BPM流程', applyDate:'2026-03-10', entryTime:'2026-03-10 14:00:00', entryBy:'刘永超', updateTime:'2026-03-12 10:00:00', updateBy:'审批系统' },
+  { applyNo:'RXRTSQ00000008', serviceNo:'', applyType:'新增', applyStatus:'待处理', qualCustNo:'1000000934', qualCustName:'吕二十五', qualCustOrg:'北京分公司/朝阳营业部', subsidyCustNo:'2000000956', subsidyCustName:'施二十六', subsidyCustOrg:'北京分公司/朝阳营业部', amount:'45,000.00', maxPeriod:'3', serviceCode:'TG003', serviceName:'进取优选策略', advisor:'陈经理', applyStart:'2026-03-01', applyEnd:'2026-05-31', applyDesc:'自动审批通过，待系统处理', flowTitle:'睿享融通新增申请-BPM流程', applyDate:'2026-02-20', entryTime:'2026-02-20 11:00:00', entryBy:'系统', updateTime:'2026-03-01 08:00:00', updateBy:'系统' },
+  { applyNo:'RXRTSQ00000009', serviceNo:'RXRTFW00000009', applyType:'新增', applyStatus:'申请成功', qualCustNo:'1000000945', qualCustName:'张二十七', qualCustOrg:'上海分公司/浦东营业部', subsidyCustNo:'2000000967', subsidyCustName:'孔二十八', subsidyCustOrg:'上海分公司/浦东营业部', amount:'55,000.00', maxPeriod:'4', serviceCode:'TG004', serviceName:'平衡配置计划', advisor:'刘经理', applyStart:'2026-02-01', applyEnd:'2026-04-30', applyDesc:'新增大客户服务', flowTitle:'睿享融通新增申请-BPM流程', applyDate:'2026-01-15', entryTime:'2026-01-15 10:00:00', entryBy:'陈凯宁', updateTime:'2026-02-01 09:00:00', updateBy:'审批系统' },
+  { applyNo:'RXRTSQ00000010', serviceNo:'', applyType:'新增', applyStatus:'申请失败', qualCustNo:'1000000956', qualCustName:'曹二十九', qualCustOrg:'成都分公司/锦江营业部', subsidyCustNo:'2000000978', subsidyCustName:'严三十', subsidyCustOrg:'成都分公司/锦江营业部', amount:'35,000.00', maxPeriod:'3', serviceCode:'TG001', serviceName:'智投精选一号', advisor:'王经理', applyStart:'2026-01-01', applyEnd:'2026-03-31', applyDesc:'客户资产不达标', flowTitle:'睿享融通新增申请-BPM流程', applyDate:'2025-12-20', entryTime:'2025-12-20 15:00:00', entryBy:'刘永超', updateTime:'2026-01-05 10:00:00', updateBy:'股票咨询台' },
+];
+
+const serviceData = [
+  { serviceNo:'RXRTFW00000001', status:'正常', qualCustNo:'1000000123', qualCustName:'张三', qualCustOrg:'广州分公司/天河营业部', subsidyCustNo:'2000000456', subsidyCustName:'李四', subsidyCustOrg:'广州分公司/天河营业部', currentPeriod:'2', maxPeriod:'4', amount:'50,000.00', earliestStart:'2025-09-01', currentStart:'2025-12-01', currentEnd:'2026-02-28', netInterest:'38,200.50', convertedAmount:'32,857.14', coverFlag:'是', serviceCode:'TG001', serviceName:'智投精选一号', advisor:'王经理', flowTitle:'睿享融通服务申请-BPM流程', entryTime:'2025-08-20 14:30:00', entryBy:'陈凯宁', updateTime:'2025-12-01 09:00:00', updateBy:'股票咨询台' },
+  { serviceNo:'RXRTFW00000002', status:'已过期', qualCustNo:'1000000234', qualCustName:'赵六', qualCustOrg:'深圳分公司/福田营业部', subsidyCustNo:'2000000567', subsidyCustName:'钱七', subsidyCustOrg:'深圳分公司/福田营业部', currentPeriod:'4', maxPeriod:'4', amount:'80,000.00', earliestStart:'2025-03-01', currentStart:'2025-09-01', currentEnd:'2025-11-30', netInterest:'76,500.00', convertedAmount:'80,000.00', coverFlag:'否', serviceCode:'TG002', serviceName:'稳健增长组合', advisor:'赵经理', flowTitle:'睿享融通服务申请-BPM流程', entryTime:'2025-02-15 10:00:00', entryBy:'刘永超', updateTime:'2025-12-02 00:00:00', updateBy:'系统' },
+  { serviceNo:'RXRTFW00000003', status:'正常', qualCustNo:'1000000345/1000000456', qualCustName:'孙八/周九', qualCustOrg:'北京分公司/朝阳营业部', subsidyCustNo:'2000000678', subsidyCustName:'吴十', subsidyCustOrg:'北京分公司/朝阳营业部', currentPeriod:'1', maxPeriod:'4', amount:'100,000.00', earliestStart:'2025-11-01', currentStart:'2025-11-01', currentEnd:'2026-01-31', netInterest:'55,800.00', convertedAmount:'37,254.90', coverFlag:'是', serviceCode:'TG003', serviceName:'进取优选策略', advisor:'陈经理', flowTitle:'睿享融通服务申请-BPM流程', entryTime:'2025-10-25 16:00:00', entryBy:'陈凯宁', updateTime:'2025-11-01 08:00:00', updateBy:'股票咨询台' },
+  { serviceNo:'RXRTFW00000004', status:'已取消', qualCustNo:'1000000567', qualCustName:'郑十一', qualCustOrg:'上海分公司/浦东营业部', subsidyCustNo:'2000000789', subsidyCustName:'王十二', subsidyCustOrg:'上海分公司/浦东营业部', currentPeriod:'1', maxPeriod:'4', amount:'60,000.00', earliestStart:'2025-06-01', currentStart:'2025-06-01', currentEnd:'2025-08-31', netInterest:'0.00', convertedAmount:'0.00', coverFlag:'否', serviceCode:'TG001', serviceName:'智投精选一号', advisor:'王经理', flowTitle:'睿享融通服务申请-BPM流程', entryTime:'2025-05-20 11:00:00', entryBy:'刘永超', updateTime:'2025-10-15 14:00:00', updateBy:'股票咨询台' },
+  { serviceNo:'RXRTFW00000005', status:'正常', qualCustNo:'1000000678', qualCustName:'冯十三', qualCustOrg:'广州分公司/越秀营业部', subsidyCustNo:'2000000890', subsidyCustName:'褚十四', subsidyCustOrg:'广州分公司/越秀营业部', currentPeriod:'3', maxPeriod:'4', amount:'45,000.00', earliestStart:'2025-07-01', currentStart:'2025-11-01', currentEnd:'2026-01-31', netInterest:'42,300.00', convertedAmount:'28,676.47', coverFlag:'是', serviceCode:'TG004', serviceName:'平衡配置计划', advisor:'刘经理', flowTitle:'睿享融通服务申请-BPM流程', entryTime:'2025-06-10 09:30:00', entryBy:'陈凯宁', updateTime:'2025-11-01 08:00:00', updateBy:'股票咨询台' },
+  { serviceNo:'RXRTFW00000006', status:'异常', qualCustNo:'1000000789', qualCustName:'卫十五', qualCustOrg:'成都分公司/锦江营业部', subsidyCustNo:'2000000901', subsidyCustName:'蒋十六', subsidyCustOrg:'成都分公司/锦江营业部', currentPeriod:'1', maxPeriod:'4', amount:'35,000.00', earliestStart:'2025-10-01', currentStart:'2025-10-01', currentEnd:'2025-12-31', netInterest:'0.00', convertedAmount:'0.00', coverFlag:'否', serviceCode:'TG002', serviceName:'稳健增长组合', advisor:'赵经理', flowTitle:'睿享融通服务申请-BPM流程', entryTime:'2025-09-15 15:00:00', entryBy:'刘永超', updateTime:'2025-10-02 10:00:00', updateBy:'股票咨询台' },
+  { serviceNo:'RXRTFW00000007', status:'正常', qualCustNo:'1000000890', qualCustName:'沈十七', qualCustOrg:'杭州分公司/西湖营业部', subsidyCustNo:'2000000912', subsidyCustName:'韩十八', subsidyCustOrg:'杭州分公司/西湖营业部', currentPeriod:'2', maxPeriod:'4', amount:'55,000.00', earliestStart:'2025-08-01', currentStart:'2025-11-01', currentEnd:'2026-01-31', netInterest:'48,900.00', convertedAmount:'36,176.47', coverFlag:'是', serviceCode:'TG003', serviceName:'进取优选策略', advisor:'陈经理', flowTitle:'睿享融通服务申请-BPM流程', entryTime:'2025-07-20 13:00:00', entryBy:'陈凯宁', updateTime:'2025-11-01 08:00:00', updateBy:'股票咨询台' },
+  { serviceNo:'RXRTFW00000008', status:'已过期', qualCustNo:'1000000901', qualCustName:'杨十九', qualCustOrg:'武汉分公司/光谷营业部', subsidyCustNo:'2000000923', subsidyCustName:'朱二十', subsidyCustOrg:'武汉分公司/光谷营业部', currentPeriod:'4', maxPeriod:'4', amount:'70,000.00', earliestStart:'2025-04-01', currentStart:'2025-10-01', currentEnd:'2025-12-31', netInterest:'68,500.00', convertedAmount:'70,000.00', coverFlag:'否', serviceCode:'TG001', serviceName:'智投精选一号', advisor:'王经理', flowTitle:'睿享融通服务申请-BPM流程', entryTime:'2025-03-10 14:00:00', entryBy:'刘永超', updateTime:'2026-01-01 00:00:00', updateBy:'系统' },
+];
+
+const adjustData = [
+  { applyNo:'RXRTSQ00000001', serviceNo:'RXRTFW00000001', applyType:'延期', applyStatus:'待复核', qualCustNo:'1000000123', qualCustName:'张三', subsidyCustNo:'2000000456', subsidyCustName:'李四', amount:'50,000.00', applyStart:'2026-03-01', applyEnd:'2026-05-31', applyDesc:'客户申请延期3个月', flowTitle:'睿享融通服务延期申请-BPM流程', applyDate:'2026-01-15', entryTime:'2026-01-15 10:00:00', entryBy:'陈凯宁', updateTime:'2026-01-15 10:00:00', updateBy:'陈凯宁' },
+  { applyNo:'RXRTSQ00000002', serviceNo:'RXRTFW00000005', applyType:'延期', applyStatus:'待审批', qualCustNo:'1000000678', qualCustName:'冯十三', subsidyCustNo:'2000000890', subsidyCustName:'褚十四', amount:'45,000.00', applyStart:'2026-02-01', applyEnd:'2026-04-30', applyDesc:'自动生成延期申请', flowTitle:'睿享融通服务延期申请-BPM流程', applyDate:'2026-01-20', entryTime:'2026-01-20 08:00:00', entryBy:'系统', updateTime:'2026-01-20 08:00:00', updateBy:'系统' },
+  { applyNo:'RXRTSQ00000003', serviceNo:'RXRTFW00000003', applyType:'取消', applyStatus:'待复核', qualCustNo:'1000000345/1000000456', qualCustName:'孙八/周九', subsidyCustNo:'2000000678', subsidyCustName:'吴十', amount:'100,000.00', applyStart:'2026-01-01', applyEnd:'2026-01-31', applyDesc:'投顾服务解约，自动同步取消', flowTitle:'睿享融通服务取消申请-BPM流程', applyDate:'2026-01-05', entryTime:'2026-01-05 11:00:00', entryBy:'系统', updateTime:'2026-01-05 11:00:00', updateBy:'股票咨询台' },
+  { applyNo:'RXRTSQ00000004', serviceNo:'RXRTFW00000007', applyType:'延期', applyStatus:'申请成功', qualCustNo:'1000000890', qualCustName:'沈十七', subsidyCustNo:'2000000912', subsidyCustName:'韩十八', amount:'55,000.00', applyStart:'2026-02-01', applyEnd:'2026-04-30', applyDesc:'手动延期申请', flowTitle:'睿享融通服务延期申请-BPM流程', applyDate:'2025-12-20', entryTime:'2025-12-20 09:00:00', entryBy:'陈凯宁', updateTime:'2026-01-02 14:00:00', updateBy:'审批系统' },
+  { applyNo:'RXRTSQ00000005', serviceNo:'RXRTFW00000004', applyType:'取消', applyStatus:'申请失败', qualCustNo:'1000000567', qualCustName:'郑十一', subsidyCustNo:'2000000789', subsidyCustName:'王十二', amount:'60,000.00', applyStart:'2025-09-01', applyEnd:'2025-11-30', applyDesc:'客户申请取消服务', flowTitle:'睿享融通服务取消申请-BPM流程', applyDate:'2025-09-10', entryTime:'2025-09-10 10:00:00', entryBy:'刘永超', updateTime:'2025-10-15 14:00:00', updateBy:'股票咨询台' },
+];
+
+// Current review target
+let currentReviewApplyNo = null;
+
+// ========== Toast ==========
+function showToast(message, type='success'){
+  const container=document.getElementById('toastContainer');
+  const icons={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+  const toast=document.createElement('div');
+  toast.className='gf-toast gf-toast--'+type;
+  toast.innerHTML=`<span class="gf-toast__icon">${icons[type]||icons.info}</span><span class="gf-toast__content">${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(()=>{
+    toast.style.animation='toastOut 300ms ease-in-out forwards';
+    setTimeout(()=>toast.remove(),300);
+  },3000);
+}
+
+// ========== Status Tag ==========
+function getStatusTag(status){
+  const map={'正常':'gf-tag--success','已过期':'gf-tag--warning','已取消':'gf-tag--default','异常':'gf-tag--error','待审批':'gf-tag--info','待复核':'gf-tag--info','待处理':'gf-tag--warning','申请成功':'gf-tag--success','申请失败':'gf-tag--error'};
+  return `<span class="gf-tag ${map[status]||'gf-tag--default'}">${status}</span>`;
+}
+
+// ========== Table Rendering ==========
+function renderNewApplyTable(data){
+  const d=data||newApplyData;
+  const tbody=document.getElementById('newApplyTableBody');
+  document.getElementById('newApplyCount').textContent=d.length;
+  if(d.length===0){ tbody.innerHTML=`<tr><td colspan="24" class="gf-table__empty">暂无数据</td></tr>`; return; }
+  tbody.innerHTML=d.map(r=>`<tr>
+    <td class="number-col">${r.applyNo}</td><td class="number-col">${r.serviceNo||'—'}</td><td>${getStatusTag(r.applyStatus)}</td>
+    <td class="number-col">${r.qualCustNo}</td><td>${r.qualCustName}</td><td>${r.qualCustOrg}</td>
+    <td class="number-col">${r.subsidyCustNo}</td><td>${r.subsidyCustName}</td><td>${r.subsidyCustOrg}</td>
+    <td class="number-col">${r.amount}</td><td class="number-col">${r.maxPeriod}</td>
+    <td class="number-col">${r.serviceCode}</td><td>${r.serviceName}</td><td>${r.advisor}</td>
+    <td class="number-col">${r.applyStart}</td><td class="number-col">${r.applyEnd}</td>
+    <td>${r.applyDesc}</td><td><span class="gf-link">${r.flowTitle}</span></td>
+    <td class="number-col">${r.applyDate}</td><td class="number-col">${r.entryTime}</td><td>${r.entryBy}</td>
+    <td class="number-col">${r.updateTime}</td><td>${r.updateBy}</td>
+    <td><div class="gf-table__actions"><button class="gf-btn gf-btn--text gf-btn--sm" onclick="openDetailModal('newApply','${r.applyNo}')">查看</button></div></td>
+  </tr>`).join('');
+}
+
+function renderServiceTable(data){
+  const d=data||serviceData;
+  const tbody=document.getElementById('serviceTableBody');
+  document.getElementById('serviceCount').textContent=d.length;
+  if(d.length===0){ tbody.innerHTML=`<tr><td colspan="26" class="gf-table__empty">暂无数据</td></tr>`; return; }
+  tbody.innerHTML=d.map(r=>`<tr>
+    <td class="number-col">${r.serviceNo}</td><td>${getStatusTag(r.status)}</td>
+    <td class="number-col">${r.qualCustNo}</td><td>${r.qualCustName}</td><td>${r.qualCustOrg}</td>
+    <td class="number-col">${r.subsidyCustNo}</td><td>${r.subsidyCustName}</td><td>${r.subsidyCustOrg}</td>
+    <td class="number-col">${r.currentPeriod}</td><td class="number-col">${r.maxPeriod}</td>
+    <td class="number-col">${r.amount}</td><td class="number-col">${r.earliestStart}</td>
+    <td class="number-col">${r.currentStart}</td><td class="number-col">${r.currentEnd}</td>
+    <td class="number-col">${r.netInterest}</td><td class="number-col">${r.convertedAmount}</td>
+    <td>${r.coverFlag}</td><td class="number-col">${r.serviceCode}</td><td>${r.serviceName}</td><td>${r.advisor}</td>
+    <td><span class="gf-link">${r.flowTitle}</span></td>
+    <td class="number-col">${r.entryTime}</td><td>${r.entryBy}</td>
+    <td class="number-col">${r.updateTime}</td><td>${r.updateBy}</td>
+    <td><div class="gf-table__actions">
+      ${r.status==='正常'?`<button class="gf-btn gf-btn--text gf-btn--sm" onclick="openExtendModal('${r.serviceNo}')">延期</button><button class="gf-btn gf-btn--danger-text gf-btn--sm" onclick="openCancelModal('${r.serviceNo}')">取消</button>`:''}
+      <button class="gf-btn gf-btn--text gf-btn--sm" onclick="openDetailModal('service','${r.serviceNo}')">查看</button>
+    </div></td>
+  </tr>`).join('');
+}
+
+function renderAdjustTable(data){
+  const d=data||adjustData;
+  const tbody=document.getElementById('adjustTableBody');
+  document.getElementById('adjustCount').textContent=d.length;
+  if(d.length===0){ tbody.innerHTML=`<tr><td colspan="19" class="gf-table__empty">暂无数据</td></tr>`; return; }
+  tbody.innerHTML=d.map(r=>`<tr>
+    <td class="number-col">${r.applyNo}</td><td class="number-col">${r.serviceNo}</td><td>${r.applyType}</td><td>${getStatusTag(r.applyStatus)}</td>
+    <td class="number-col">${r.qualCustNo}</td><td>${r.qualCustName}</td><td class="number-col">${r.subsidyCustNo}</td><td>${r.subsidyCustName}</td>
+    <td class="number-col">${r.amount}</td><td class="number-col">${r.applyStart}</td><td class="number-col">${r.applyEnd}</td>
+    <td>${r.applyDesc}</td><td><span class="gf-link">${r.flowTitle}</span></td>
+    <td class="number-col">${r.applyDate}</td><td class="number-col">${r.entryTime}</td><td>${r.entryBy}</td>
+    <td class="number-col">${r.updateTime}</td><td>${r.updateBy}</td>
+    <td><div class="gf-table__actions">
+      ${r.applyStatus==='待审批'?`<button class="gf-btn gf-btn--text gf-btn--sm" onclick="openFirstReviewModal('${r.applyNo}')">初审</button>`:''}
+      ${r.applyStatus==='待复核'?`<button class="gf-btn gf-btn--text gf-btn--sm" onclick="openReReviewModal('${r.applyNo}')">复审</button>`:''}
+      <button class="gf-btn gf-btn--text gf-btn--sm" onclick="openDetailModal('adjust','${r.applyNo}')">查看</button>
+    </div></td>
+  </tr>`).join('');
+}
+
+// ========== Pagination (simple visual) ==========
+function renderPagination(id, total){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.innerHTML=`<span class="gf-pagination__info">共 ${total} 条</span>
+    <select class="gf-pagination__size-select"><option>10条/页</option><option>20条/页</option><option>50条/页</option></select>
+    <button class="gf-pagination__btn gf-pagination__btn--disabled">&lt;</button><button class="gf-pagination__btn gf-pagination__btn--active">1</button><button class="gf-pagination__btn gf-pagination__btn--disabled">&gt;</button>
+    <div class="gf-pagination__jump"><span>跳至</span><input class="gf-pagination__jump-input" type="text" value="1"><span>页</span></div>`;
+}
+
+// ========== Sidebar ==========
+function toggleSubmenu(itemEl){
+  const submenu=itemEl.nextElementSibling;
+  if(!submenu)return;
+  const isExpanded=itemEl.classList.contains('gf-sidebar__item--expanded');
+  if(isExpanded){
+    itemEl.classList.remove('gf-sidebar__item--expanded');
+    submenu.classList.remove('gf-sidebar__submenu--expanded');
+  }else{
+    itemEl.classList.add('gf-sidebar__item--expanded');
+    submenu.classList.add('gf-sidebar__submenu--expanded');
+  }
+}
+
+// ========== Multi-Tab ==========
+const tabs=new Map();
+tabs.set('service-manage',{name:'服务管理',active:true});
+
+function switchToTab(tabId,tabName,sidebarItem){
+  document.querySelectorAll('.gf-sidebar__submenu-item--active').forEach(el=>el.classList.remove('gf-sidebar__submenu-item--active'));
+  if(sidebarItem)sidebarItem.classList.add('gf-sidebar__submenu-item--active');
+  if(!tabs.has(tabId)){ tabs.set(tabId,{name:tabName,active:false}); addTabItem(tabId,tabName); }
+  activateTab(tabId);
+}
+
+function addTabItem(tabId,tabName){
+  const container=document.getElementById('multitab');
+  const tabEl=document.createElement('div');
+  tabEl.className='gf-multitab__item'; tabEl.dataset.tab=tabId;
+  tabEl.innerHTML=`<span>${tabName}</span><span class="gf-multitab__close" onclick="event.stopPropagation();closeTab('${tabId}')"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M6 18L18 6"/></svg></span>`;
+  tabEl.onclick=()=>activateTab(tabId);
+  container.appendChild(tabEl);
+}
+
+function activateTab(tabId){
+  tabs.forEach((v,k)=>{v.active=false;});
+  if(tabs.has(tabId))tabs.get(tabId).active=true;
+  document.querySelectorAll('.gf-multitab__item').forEach(el=>el.classList.toggle('gf-multitab__item--active',el.dataset.tab===tabId));
+  document.querySelectorAll('.gf-page').forEach(el=>el.classList.remove('gf-page--active'));
+  const page=document.getElementById('page-'+tabId);
+  if(page)page.classList.add('gf-page--active');
+  // Refresh table counts
+  if(tabId==='new-apply'){ renderNewApplyTable(); renderPagination('newApplyPagination',newApplyData.length); }
+  if(tabId==='service-manage'){ renderServiceTable(); renderPagination('servicePagination',serviceData.length); }
+  if(tabId==='adjust-apply'){ renderAdjustTable(); renderPagination('adjustPagination',adjustData.length); }
+}
+
+function closeTab(tabId){
+  const tabEl=document.querySelector(`.gf-multitab__item[data-tab="${tabId}"]`);
+  if(!tabEl)return;
+  const wasActive=tabEl.classList.contains('gf-multitab__item--active');
+  const tabKeys=Array.from(tabs.keys());
+  if(tabKeys.length<=1)return;
+  tabEl.remove(); tabs.delete(tabId);
+  if(wasActive){ const remaining=Array.from(tabs.keys()); const idx=tabKeys.indexOf(tabId); const nextId=remaining[Math.min(idx,remaining.length-1)]; activateTab(nextId); }
+}
+
+// ========== Multi-Select ==========
+function toggleMultiSelect(id){
+  const container=document.getElementById(id);
+  const dropdown=container.querySelector('.gf-multi-select__dropdown');
+  const trigger=container.querySelector('.gf-multi-select__trigger');
+  const isOpen=dropdown.classList.contains('gf-multi-select__dropdown--open');
+  document.querySelectorAll('.gf-multi-select__dropdown--open').forEach(d=>d.classList.remove('gf-multi-select__dropdown--open'));
+  document.querySelectorAll('.gf-multi-select__trigger--focus').forEach(t=>t.classList.remove('gf-multi-select__trigger--focus'));
+  if(!isOpen){ dropdown.classList.add('gf-multi-select__dropdown--open'); trigger.classList.add('gf-multi-select__trigger--focus'); }
+}
+function toggleOption(optionEl,containerId){ optionEl.querySelector('.gf-multi-select__checkbox').classList.toggle('gf-multi-select__checkbox--checked'); updateMultiSelectDisplay(containerId); }
+function updateMultiSelectDisplay(containerId){
+  const container=document.getElementById(containerId);
+  const trigger=container.querySelector('.gf-multi-select__trigger');
+  const selected=container.querySelectorAll('.gf-multi-select__checkbox--checked');
+  const placeholder=trigger.querySelector('.gf-multi-select__placeholder');
+  if(selected.length===0){ placeholder.textContent='请选择'; placeholder.className='gf-multi-select__placeholder'; }
+  else{ const labels=Array.from(selected).map(cb=>cb.parentElement.dataset.value); placeholder.textContent=labels.join('、'); placeholder.className=''; }
+}
+function getMultiSelectValues(id){
+  const container=document.getElementById(id);
+  return Array.from(container.querySelectorAll('.gf-multi-select__checkbox--checked')).map(cb=>cb.parentElement.dataset.value);
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.gf-multi-select')){
+    document.querySelectorAll('.gf-multi-select__dropdown--open').forEach(d=>d.classList.remove('gf-multi-select__dropdown--open'));
+    document.querySelectorAll('.gf-multi-select__trigger--focus').forEach(t=>t.classList.remove('gf-multi-select__trigger--focus'));
+  }
+});
+
+// ========== Filter Functions ==========
+function filterNewApply(){
+  let d=[...newApplyData];
+  const statuses=getMultiSelectValues('msNewApplyStatus');
+  if(statuses.length>0)d=d.filter(r=>statuses.includes(r.applyStatus));
+  const qualNo=document.getElementById('fNewQualCustNo').value.trim();
+  if(qualNo)d=d.filter(r=>r.qualCustNo.includes(qualNo));
+  const qualName=document.getElementById('fNewQualCustName').value.trim();
+  if(qualName)d=d.filter(r=>r.qualCustName.includes(qualName));
+  const subNo=document.getElementById('fNewSubsidyNo').value.trim();
+  if(subNo)d=d.filter(r=>r.subsidyCustNo.includes(subNo));
+  const subName=document.getElementById('fNewSubsidyName').value.trim();
+  if(subName)d=d.filter(r=>r.subsidyCustName.includes(subName));
+  const svcNo=document.getElementById('fNewServiceNo').value.trim();
+  if(svcNo)d=d.filter(r=>r.serviceNo.includes(svcNo));
+  const dFrom=document.getElementById('fNewDateFrom').value;
+  const dTo=document.getElementById('fNewDateTo').value;
+  if(dFrom)d=d.filter(r=>r.applyDate>=dFrom);
+  if(dTo)d=d.filter(r=>r.applyDate<=dTo);
+  renderNewApplyTable(d); renderPagination('newApplyPagination',d.length);
+  showToast(`查询完成，共找到 ${d.length} 条记录`,'info');
+}
+function resetNewApplyFilter(){
+  document.querySelectorAll('#page-new-apply .gf-filter__input').forEach(el=>el.value='');
+  document.querySelectorAll('#msNewApplyStatus .gf-multi-select__checkbox--checked').forEach(el=>el.classList.remove('gf-multi-select__checkbox--checked'));
+  updateMultiSelectDisplay('msNewApplyStatus');
+  renderNewApplyTable(); renderPagination('newApplyPagination',newApplyData.length);
+}
+
+function filterService(){
+  let d=[...serviceData];
+  const statuses=getMultiSelectValues('msServiceStatus');
+  if(statuses.length>0)d=d.filter(r=>statuses.includes(r.status));
+  const qualNo=document.getElementById('fSvcQualNo').value.trim();
+  if(qualNo)d=d.filter(r=>r.qualCustNo.includes(qualNo));
+  const qualName=document.getElementById('fSvcQualName').value.trim();
+  if(qualName)d=d.filter(r=>r.qualCustName.includes(qualName));
+  const subNo=document.getElementById('fSvcSubsidyNo').value.trim();
+  if(subNo)d=d.filter(r=>r.subsidyCustNo.includes(subNo));
+  const subName=document.getElementById('fSvcSubsidyName').value.trim();
+  if(subName)d=d.filter(r=>r.subsidyCustName.includes(subName));
+  const svcNo=document.getElementById('fSvcServiceNo').value.trim();
+  if(svcNo)d=d.filter(r=>r.serviceNo.includes(svcNo));
+  const advisor=document.getElementById('fSvcAdvisor').value.trim();
+  if(advisor)d=d.filter(r=>r.advisor.includes(advisor));
+  renderServiceTable(d); renderPagination('servicePagination',d.length);
+  showToast(`查询完成，共找到 ${d.length} 条记录`,'info');
+}
+function resetServiceFilter(){
+  document.querySelectorAll('#page-service-manage .gf-filter__input').forEach(el=>el.value='');
+  document.querySelectorAll('#msServiceStatus .gf-multi-select__checkbox--checked').forEach(el=>el.classList.remove('gf-multi-select__checkbox--checked'));
+  updateMultiSelectDisplay('msServiceStatus');
+  renderServiceTable(); renderPagination('servicePagination',serviceData.length);
+}
+
+function filterAdjust(){
+  let d=[...adjustData];
+  const statuses=getMultiSelectValues('msAdjustStatus');
+  if(statuses.length>0)d=d.filter(r=>statuses.includes(r.applyStatus));
+  const type=document.getElementById('fAdjustType').value;
+  if(type)d=d.filter(r=>r.applyType===type);
+  const applyNo=document.getElementById('fAdjustApplyNo').value.trim();
+  if(applyNo)d=d.filter(r=>r.applyNo.includes(applyNo));
+  const svcNo=document.getElementById('fAdjustServiceNo').value.trim();
+  if(svcNo)d=d.filter(r=>r.serviceNo.includes(svcNo));
+  const qualNo=document.getElementById('fAdjustQualNo').value.trim();
+  if(qualNo)d=d.filter(r=>r.qualCustNo.includes(qualNo));
+  const qualName=document.getElementById('fAdjustQualName').value.trim();
+  if(qualName)d=d.filter(r=>r.qualCustName.includes(qualName));
+  const subNo=document.getElementById('fAdjustSubsidyNo').value.trim();
+  if(subNo)d=d.filter(r=>r.subsidyCustNo.includes(subNo));
+  const subName=document.getElementById('fAdjustSubsidyName').value.trim();
+  if(subName)d=d.filter(r=>r.subsidyCustName.includes(subName));
+  const dFrom=document.getElementById('fAdjustDateFrom').value;
+  const dTo=document.getElementById('fAdjustDateTo').value;
+  if(dFrom)d=d.filter(r=>r.applyDate>=dFrom);
+  if(dTo)d=d.filter(r=>r.applyDate<=dTo);
+  renderAdjustTable(d); renderPagination('adjustPagination',d.length);
+  showToast(`查询完成，共找到 ${d.length} 条记录`,'info');
+}
+function resetAdjustFilter(){
+  document.querySelectorAll('#page-adjust-apply .gf-filter__input').forEach(el=>el.value='');
+  document.getElementById('fAdjustType').value='';
+  document.querySelectorAll('#msAdjustStatus .gf-multi-select__checkbox--checked').forEach(el=>el.classList.remove('gf-multi-select__checkbox--checked'));
+  updateMultiSelectDisplay('msAdjustStatus');
+  renderAdjustTable(); renderPagination('adjustPagination',adjustData.length);
+}
+
+// ========== Modal: 新增申请 ==========
+function openNewApplyModal(){
+  document.getElementById('naQualNo').value=''; document.getElementById('naQualName').value='';
+  document.getElementById('naQualOrg').value=''; document.getElementById('naSubsidyNo').value='';
+  document.getElementById('naSubsidyName').value=''; document.getElementById('naSubsidyOrg').value='';
+  document.getElementById('naAmount').value=''; document.getElementById('naMaxPeriod').value='';
+  document.getElementById('naServiceCode').value=''; document.getElementById('naServiceName').value='';
+  document.getElementById('naStartDate').value=''; document.getElementById('naEndDate').value='';
+  document.getElementById('naDesc').value='';
+  document.getElementById('newApplyModal').style.display='flex';
+}
+function closeNewApplyModal(){ document.getElementById('newApplyModal').style.display='none'; }
+function onServiceCodeChange(){
+  const code=document.getElementById('naServiceCode').value;
+  document.getElementById('naServiceName').value=serviceMap[code]||'';
+}
+function submitNewApply(){
+  const qualNo=document.getElementById('naQualNo').value.trim();
+  const qualName=document.getElementById('naQualName').value.trim();
+  const subsidyNo=document.getElementById('naSubsidyNo').value.trim();
+  const subsidyName=document.getElementById('naSubsidyName').value.trim();
+  const amount=document.getElementById('naAmount').value.trim();
+  const maxPeriod=document.getElementById('naMaxPeriod').value;
+  const svcCode=document.getElementById('naServiceCode').value;
+  const startDate=document.getElementById('naStartDate').value;
+  const endDate=document.getElementById('naEndDate').value;
+  if(!qualNo||!qualName||!subsidyNo||!subsidyName||!amount||!maxPeriod||!svcCode||!startDate||!endDate){
+    showToast('请填写所有必填项（标*字段）','warning'); return;
+  }
+  const applyNo=genApplyNo();
+  const newRecord={
+    applyNo, serviceNo:'', applyType:'新增', applyStatus:'待审批',
+    qualCustNo:qualNo, qualCustName:qualName, qualCustOrg:document.getElementById('naQualOrg').value.trim()||'—',
+    subsidyCustNo:subsidyNo, subsidyCustName:subsidyName, subsidyCustOrg:document.getElementById('naSubsidyOrg').value.trim()||'—',
+    amount:Number(amount).toLocaleString('en-US',{minimumFractionDigits:2}), maxPeriod, serviceCode:svcCode,
+    serviceName:serviceMap[svcCode]||'', advisor:advisorMap[svcCode]||'',
+    applyStart:startDate, applyEnd:endDate, applyDesc:document.getElementById('naDesc').value.trim()||'—',
+    flowTitle:'睿享融通新增申请-BPM流程', applyDate:today(), entryTime:now(), entryBy:'陈凯宁', updateTime:now(), updateBy:'陈凯宁'
+  };
+  // Add to newApplyData
+  newApplyData.unshift(newRecord);
+  // Also add to adjustData (cross-page flow)
+  adjustData.unshift({...newRecord});
+  closeNewApplyModal();
+  renderNewApplyTable(); renderPagination('newApplyPagination',newApplyData.length);
+  renderAdjustTable(); renderPagination('adjustPagination',adjustData.length);
+  showToast(`新增申请已提交！\n申请编号：${applyNo}\n申请状态：待审批 → 请前往「调整服务申请」页进行初审`);
+}
+
+// ========== Modal: 延期 ==========
+function openExtendModal(serviceNo){
+  const svc=serviceData.find(r=>r.serviceNo===serviceNo);
+  if(!svc)return;
+  document.getElementById('extServiceNo').value=svc.serviceNo;
+  document.getElementById('extQualNo').value=svc.qualCustNo;
+  document.getElementById('extQualName').value=svc.qualCustName;
+  document.getElementById('extSubsidyNo').value=svc.subsidyCustNo;
+  document.getElementById('extSubsidyName').value=svc.subsidyCustName;
+  document.getElementById('extAmount').value=svc.amount;
+  const endDate=new Date(svc.currentEnd);
+  const newStart=new Date(endDate); newStart.setDate(newStart.getDate()+1);
+  const newEnd=new Date(newStart); newEnd.setMonth(newEnd.getMonth()+3);
+  document.getElementById('extStartDate').value=formatDate(newStart);
+  document.getElementById('extEndDate').value=formatDate(newEnd);
+  document.getElementById('extDesc').value='';
+  document.getElementById('extendModal').style.display='flex';
+}
+function closeExtendModal(){ document.getElementById('extendModal').style.display='none'; }
+function submitExtend(){
+  const svcNo=document.getElementById('extServiceNo').value;
+  const svc=serviceData.find(r=>r.serviceNo===svcNo);
+  const applyNo=genApplyNo();
+  const newRecord={
+    applyNo, serviceNo:svcNo, applyType:'延期', applyStatus:'待复核',
+    qualCustNo:svc.qualCustNo, qualCustName:svc.qualCustName,
+    subsidyCustNo:svc.subsidyCustNo, subsidyCustName:svc.subsidyCustName,
+    amount:svc.amount, applyStart:document.getElementById('extStartDate').value,
+    applyEnd:document.getElementById('extEndDate').value,
+    applyDesc:document.getElementById('extDesc').value.trim()||'手动延期申请',
+    flowTitle:'睿享融通服务延期申请-BPM流程', applyDate:today(), entryTime:now(), entryBy:'陈凯宁', updateTime:now(), updateBy:'陈凯宁'
+  };
+  adjustData.unshift(newRecord);
+  closeExtendModal();
+  renderAdjustTable(); renderPagination('adjustPagination',adjustData.length);
+  showToast(`延期申请已提交！\n申请编号：${applyNo}\n申请类型：延期 | 状态：待复核 → 请前往「调整服务申请」页进行复审`);
+}
+
+// ========== Modal: 取消 ==========
+function openCancelModal(serviceNo){
+  const svc=serviceData.find(r=>r.serviceNo===serviceNo);
+  if(!svc)return;
+  document.getElementById('cancelServiceNo').value=svc.serviceNo;
+  document.getElementById('cancelQualName').value=svc.qualCustName;
+  document.getElementById('cancelSubsidyName').value=svc.subsidyCustName;
+  document.getElementById('cancelAmount').value=svc.amount;
+  document.getElementById('cancelReason').value='';
+  document.getElementById('cancelModal').style.display='flex';
+}
+function closeCancelModal(){ document.getElementById('cancelModal').style.display='none'; }
+function submitCancel(){
+  const svcNo=document.getElementById('cancelServiceNo').value;
+  const svc=serviceData.find(r=>r.serviceNo===svcNo);
+  const reason=document.getElementById('cancelReason').value.trim();
+  if(!reason){ showToast('请填写取消原因','warning'); return; }
+  const applyNo=genApplyNo();
+  const newRecord={
+    applyNo, serviceNo:svcNo, applyType:'取消', applyStatus:'待复核',
+    qualCustNo:svc.qualCustNo, qualCustName:svc.qualCustName,
+    subsidyCustNo:svc.subsidyCustNo, subsidyCustName:svc.subsidyCustName,
+    amount:svc.amount, applyStart:svc.currentStart, applyEnd:svc.currentEnd,
+    applyDesc:reason, flowTitle:'睿享融通服务取消申请-BPM流程',
+    applyDate:today(), entryTime:now(), entryBy:'陈凯宁', updateTime:now(), updateBy:'陈凯宁'
+  };
+  adjustData.unshift(newRecord);
+  closeCancelModal();
+  renderAdjustTable(); renderPagination('adjustPagination',adjustData.length);
+  showToast(`取消申请已提交！\n申请编号：${applyNo}\n申请类型：取消 | 状态：待复核 → 请前往「调整服务申请」页进行复审`);
+}
+
+// ========== Modal: 初审 ==========
+function openFirstReviewModal(applyNo){
+  currentReviewApplyNo=applyNo;
+  const row=adjustData.find(r=>r.applyNo===applyNo);
+  if(!row)return;
+  document.getElementById('firstReviewDetail').innerHTML=buildAdjustDetailHTML(row);
+  document.getElementById('firstReviewOpinion').value='';
+  // Show process steps
+  document.getElementById('reviewProcessSteps').innerHTML=`
+    <div class="gf-process-step"><div class="gf-process-step__dot gf-process-step__dot--active">1</div><span class="gf-process-step__label gf-process-step__label--active">初审</span></div>
+    <div class="gf-process-step__line"></div>
+    <div class="gf-process-step"><div class="gf-process-step__dot gf-process-step__dot--pending">2</div><span class="gf-process-step__label">复审</span></div>
+    <div class="gf-process-step__line"></div>
+    <div class="gf-process-step"><div class="gf-process-step__dot gf-process-step__dot--pending">3</div><span class="gf-process-step__label">执行</span></div>`;
+  document.getElementById('firstReviewModal').style.display='flex';
+}
+function closeFirstReviewModal(){ document.getElementById('firstReviewModal').style.display='none'; currentReviewApplyNo=null; }
+function submitFirstReview(action){
+  const opinion=document.getElementById('firstReviewOpinion').value.trim();
+  if(!opinion){ showToast('请填写审批意见','warning'); return; }
+  const row=adjustData.find(r=>r.applyNo===currentReviewApplyNo);
+  if(!row)return;
+  const newStatus=action==='通过'?'待复核':'申请失败';
+  row.applyStatus=newStatus; row.updateTime=now(); row.updateBy='审批系统';
+  closeFirstReviewModal();
+  renderAdjustTable(); renderPagination('adjustPagination',adjustData.length);
+  showToast(`初审${action}！\n申请编号：${currentReviewApplyNo}\n${action==='通过'?'已流转至「待复核」状态，请进行复审':'状态已变更为「申请失败」'}`);
+}
+
+// ========== Modal: 复审 ==========
+function openReReviewModal(applyNo){
+  currentReviewApplyNo=applyNo;
+  const row=adjustData.find(r=>r.applyNo===applyNo);
+  if(!row)return;
+  if(row.applyType==='延期'){
+    document.getElementById('reReviewExtendDetail').innerHTML=buildAdjustDetailHTML(row);
+    document.getElementById('reReviewExtendFirstOpinion').textContent='经初审核实，该申请材料齐全，符合延期条件，建议予以通过。— 初审人：李明';
+    document.getElementById('reReviewExtendOpinion').value='';
+    document.getElementById('reReviewExtendModal').style.display='flex';
+  }else{
+    document.getElementById('reReviewCancelDetail').innerHTML=buildAdjustDetailHTML(row);
+    document.getElementById('reReviewCancelFirstOpinion').textContent='经初审核实，该客户投顾服务已解约，取消申请合规，建议予以通过。— 初审人：李明';
+    document.getElementById('reReviewCancelOpinion').value='';
+    document.getElementById('reReviewCancelModal').style.display='flex';
+  }
+}
+function closeReReviewExtendModal(){ document.getElementById('reReviewExtendModal').style.display='none'; currentReviewApplyNo=null; }
+function closeReReviewCancelModal(){ document.getElementById('reReviewCancelModal').style.display='none'; currentReviewApplyNo=null; }
+function submitReReview(modalType,action){
+  const opinionId=modalType==='reReviewExtend'?'reReviewExtendOpinion':'reReviewCancelOpinion';
+  const opinion=document.getElementById(opinionId).value.trim();
+  if(!opinion){ showToast('请填写复审意见','warning'); return; }
+  const row=adjustData.find(r=>r.applyNo===currentReviewApplyNo);
+  if(!row)return;
+  const newStatus=action==='通过'?'申请成功':'申请失败';
+  row.applyStatus=newStatus; row.updateTime=now(); row.updateBy='审批系统';
+  if(modalType==='reReviewExtend')closeReReviewExtendModal(); else closeReReviewCancelModal();
+  renderAdjustTable(); renderPagination('adjustPagination',adjustData.length);
+  showToast(`复审${action}！\n申请编号：${currentReviewApplyNo}\n${action==='通过'?'状态已变更为「申请成功」，系统将执行调整操作':'状态已变更为「申请失败」'}`);
+}
+
+// ========== Modal: 查看详情（通用） ==========
+function openDetailModal(type,id){
+  let record,title;
+  if(type==='newApply'){ record=newApplyData.find(r=>r.applyNo===id); title='新增申请详情 - '+id; }
+  else if(type==='service'){ record=serviceData.find(r=>r.serviceNo===id); title='服务详情 - '+id; }
+  else if(type==='adjust'){ record=adjustData.find(r=>r.applyNo===id); title='调整申请详情 - '+id; }
+  if(!record)return;
+  document.getElementById('detailModalTitle').textContent=title;
+  if(type==='newApply'||type==='adjust'){
+    document.getElementById('detailGridContent').innerHTML=buildAdjustDetailHTML(record);
+  }else{
+    document.getElementById('detailGridContent').innerHTML=buildServiceDetailHTML(record);
+  }
+  document.getElementById('detailModal').style.display='flex';
+}
+function closeDetailModal(){ document.getElementById('detailModal').style.display='none'; }
+
+function buildAdjustDetailHTML(r){
+  const fields=[
+    ['申请编号',r.applyNo],['服务编号',r.serviceNo||'—'],['申请类型',r.applyType],['申请状态',r.applyStatus],
+    ['申请资格客户编号',r.qualCustNo],['申请资格客户名称',r.qualCustName],['补贴客户编号',r.subsidyCustNo],['补贴客户名称',r.subsidyCustName],
+    ['补贴金额',r.amount],['申请服务开始日期',r.applyStart],['申请服务到期日期',r.applyEnd],
+    ['申请说明',r.applyDesc],['流程标题',r.flowTitle],['申请日期',r.applyDate],
+    ['录入时间',r.entryTime],['录入人',r.entryBy],['最近更新时间',r.updateTime],['最近更新人',r.updateBy]
+  ];
+  return fields.map(f=>`<div class="gf-detail-grid__item"><span class="gf-detail-grid__label">${f[0]}：</span><span class="gf-detail-grid__value">${f[1]}</span></div>`).join('');
+}
+function buildServiceDetailHTML(r){
+  const fields=[
+    ['服务编号',r.serviceNo],['服务状态',r.status],['申请资格客户编号',r.qualCustNo],['申请资格客户名称',r.qualCustName],
+    ['申请资格客户所在机构',r.qualCustOrg],['补贴客户编号',r.subsidyCustNo],['补贴客户名称',r.subsidyCustName],['补贴客户所在机构',r.subsidyCustOrg],
+    ['当前补贴期数',r.currentPeriod],['最多可补贴期数',r.maxPeriod],['补贴金额',r.amount],
+    ['最早服务开始日期',r.earliestStart],['当期服务开始日期',r.currentStart],['当期服务到期日期',r.currentEnd],
+    ['当期已产生净利息收入',r.netInterest],['当期折算补贴金额',r.convertedAmount],['当期净利息收入预计是否覆盖费用',r.coverFlag],
+    ['投顾服务服务代码',r.serviceCode],['投顾服务服务名称',r.serviceName],['投顾人员',r.advisor],
+    ['流程标题',r.flowTitle],['录入时间',r.entryTime],['录入人',r.entryBy],['最近更新时间',r.updateTime],['最近更新人',r.updateBy]
+  ];
+  return fields.map(f=>`<div class="gf-detail-grid__item"><span class="gf-detail-grid__label">${f[0]}：</span><span class="gf-detail-grid__value">${f[1]}</span></div>`).join('');
+}
+
+// ========== Utils ==========
+function formatDate(date){
+  const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,'0'),d=String(date.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
+}
+function handleExport(){ showToast('正在导出数据，请稍候...','info'); }
+
+// ========== Init ==========
+(function init(){
+  renderNewApplyTable(); renderPagination('newApplyPagination',newApplyData.length);
+  renderServiceTable(); renderPagination('servicePagination',serviceData.length);
+  renderAdjustTable(); renderPagination('adjustPagination',adjustData.length);
+})();
+</script>
+</body>
+</html>

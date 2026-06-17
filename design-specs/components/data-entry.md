@@ -53,6 +53,11 @@
 ## 5. 日期选择器 (DatePicker)
 
 - 输入框：与输入框组件一致
+- **日历图标**：使用 `icons/common/calendar.svg`（16×16 viewBox，fill 路径），通过 `background-image` 内联到输入框右侧
+  - 图标颜色：默认 `#939599` (N4)
+  - 图标位置：`right: 8px; center`
+  - 输入框右侧内边距：`padding-right: 30px`（为图标留出空间）
+  - **隐藏原生指示器**：`::-webkit-calendar-picker-indicator { opacity: 0 }`
 - 日历面板：白色背景 + 边框
 - 选中日期：蓝色圆形背景
 - 周起始日：周日

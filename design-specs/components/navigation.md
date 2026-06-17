@@ -1,56 +1,122 @@
 # 广发中后台系统设计规范 — 导航组件
 
-## 1. 导航菜单
+## 1. 侧边栏导航 (Sidebar)
 
-### 一级菜单状态
+### 整体结构
+```html
+<div class="gf-sidebar__menu">
+  <div class="gf-sidebar__section">分组标题</div>
+  <div class="gf-sidebar__item">
+    <div class="gf-sidebar__item-content">
+      <svg class="icon">...</svg>
+      <span>菜单文字</span>
+    </div>
+    <svg class="gf-sidebar__item-arrow">...</svg>
+  </div>
+  <div class="gf-sidebar__submenu">
+    <div class="gf-sidebar__submenu-item">子菜单</div>
+  </div>
+</div>
+```
 
-| 状态 | 文字色 | 背景 | 字重 |
-|------|--------|------|------|
-| 默认 | #939599 (N6) | 透明 | 500 |
-| 悬停 | #939599 (N6) | #F0F2F5 (N2) | 500 |
-| 点击 | #939599 (N6) | #E6EAF0 (N3) | 500 |
-| 选中 | #2A6CDD (B5) | 透明 | 600 |
-| 禁用 | #C8C9CC (N5) | 透明 | 500 |
-
-### 二级菜单状态
-
-| 状态 | 文字色 | 背景 | 字重 | 字号 |
-|------|--------|------|------|------|
-| 默认 | #939599 (N6) | 透明 | 500 | 13px |
-| 悬停 | #939599 (N6) | #F7F8FA (N1) | 500 | 13px |
-| 选中 | #2A6CDD (B5) | rgba(42, 108, 221, 0.08) | 600 | 13px |
-
-### 侧边栏布局规范
-
+### 容器样式
 - 宽度：208px（展开）/ 64px（折叠）
 - 背景：#FFFFFF
 - 边框：右侧 1px solid #E8E8E8 (N2)
 - 位置：固定，顶部偏移 header-height
-- 菜单项内边距：12px 16px
-- 菜单项间距：0 8px 外边距
-- 子菜单缩进：无额外缩进，与一级菜单对齐
-- 子菜单背景：#F7F8FA (N1) 40% 透明度
-- 展开/收起动画：300ms ease-in-out
+- 主菜单容器 `.gf-sidebar__menu`：`padding: 8px 0`
 
-### 子菜单规范
+### 分组区块
+- 类名：`.gf-sidebar__section`
+- **用途**：仅在 `.gf-sidebar__submenu` 容器内使用，用于**二级内容分类标题**（如"睿享融通""私享会"）
+- **不用于一级导航分组**：一级导航直接排列菜单项，不需要分组标题
+- padding：`12px 16px 8px` (space-3 space-4 space-2)
+- 文字：`color: #8C8C8C` (N5)，`font-size: 12px`
+- `text-transform: uppercase`，`letter-spacing: 0.5px`
+- 不需要箭头、不需要点击展开，仅作为视觉分类标识
 
-当一级菜单下包含多个相关页面时，使用子菜单：
+### 一级菜单项
+- 类名：`.gf-sidebar__item`
+- 布局：`display: flex; align-items: center; justify-content: space-between; gap: 12px`
+- 内边距：`padding: 12px 16px` (space-3 space-4)
+- 外边距：`margin: 0 8px` (0 space-2)
+- 圆角：`border-radius: 2px` (radius-sm)
+- 字号：14px
+- 默认文字色：#595959 (N6)
+- 默认字重：500
+- 过渡动画：`transition: all 0.2s`
 
-- 子菜单项字号：13px
-- 子菜单项默认文字色：#939599 (N6)
-- 子菜单项悬停背景：#F7F8FA (N1)
-- 子菜单项选中文字色：#2A6CDD (Primary)
-- 子菜单项选中背景：rgba(42, 108, 221, 0.08)
-- 子菜单项选中字重：600
-- 子菜单与顶部标签导航联动：点击子菜单项切换对应标签页
+### 一级菜单状态
+| 状态 | 文字色 | 背景 | 字重 |
+|------|--------|------|------|
+| 默认 | #595959 | 透明 | 500 |
+| 悬停 | #595959 | #E8E8E8 (N2) | 500 |
+| 点击 | #595959 | #D9D9D9 (N3) | 500 |
+| **选中** | **#2A6CDD** | **transparent** | **600** |
+
+### 图标规范
+- 图标容器：`.icon`，`width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; color: currentColor; flex-shrink: 0`
+- SVG 图标：`width: 100%; height: 100%`，`stroke-width: 2`
+- 箭头图标：`.gf-sidebar__item-arrow`，`width: 12px; height: 12px; flex-shrink: 0`，默认颜色 `#595959`
+- 选中态箭头：`.gf-sidebar__item--active .gf-sidebar__item-arrow` → `color: #2A6CDD`
+- 展开状态：`.gf-sidebar__item--expanded .gf-sidebar__item-arrow` → `transform: rotate(180deg)`
+- 过渡动画：`transition: transform 300ms ease-in-out`
+
+### 子菜单容器
+- 类名：`.gf-sidebar__submenu`
+- 背景：`rgba(247, 248, 250, 0.4)`（浅灰半透明）
+- 外边距：`margin: 0 8px` (0 space-2)
+- 圆角：`border-radius: 2px` (radius-sm)
+- 默认状态：`max-height: 0; overflow: hidden`
+- 展开状态：`.gf-sidebar__submenu--expanded` → `max-height: 500px`
+- 过渡动画：`transition: max-height 300ms ease-in-out`
+
+### 二级子菜单项
+- 类名：`.gf-sidebar__submenu-item`
+- 布局：`display: flex; align-items: center`
+- 内边距：`padding: 8px 16px` (space-2 space-4)
+- 外边距：`margin: 4px 8px` (space-1 space-2)
+- 圆角：`border-radius: 2px` (radius-sm)
+- 字号：13px
+- 默认文字色：#595959 (N6)
+- 默认字重：500
+- 过渡动画：`transition: all 0.2s`
+
+### 二级子菜单项状态
+| 状态 | 文字色 | 背景 | 字重 |
+|------|--------|------|------|
+| 默认 | #595959 | 透明 | 500 |
+| 悬停 | #595959 | rgba(247,248,250,0.6) | 500 |
+| **选中** | **#2A6CDD** | **#EAF0FC** | **600** |
+
+### 嵌套子菜单（二级分类）
+当子菜单内包含多个功能模块时，使用 `gf-sidebar__section` 作为**二级分类标题**（如"睿享融通""私享会"），与一级分组标题共用同一样式：
+- 类名：`.gf-sidebar__section`
+- 样式：复用一级分组区块样式（`padding: 12px 16px 8px; color: #8C8C8C; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px`）
+- 用途：在 `.gf-sidebar__submenu` 容器内对子菜单项进行内容分类
+- 不需要箭头、不需要点击展开，仅作为视觉分类标识
+
+### 正确的嵌套结构示例
+```
+gf-sidebar__menu
+├── gf-sidebar__item "营销专区"         ← 一级菜单（直接排列，无分组标题）
+│   └── gf-sidebar__submenu            ← 子菜单容器
+│       ├── gf-sidebar__section "睿享融通"   ← 二级分类
+│       │   ├── gf-sidebar__submenu-item    ← 页面项
+│       │   └── gf-sidebar__submenu-item
+│       └── gf-sidebar__section "私享会"     ← 二级分类
+│           └── gf-sidebar__submenu-item
+├── gf-sidebar__item "数据统计"         ← 一级菜单
+└── gf-sidebar__item "系统管理"         ← 一级菜单
+```
 
 ### 展开/收起箭头规范
-
+- 类名：`gf-sidebar__item-arrow`
 - 图标：ChevronDown (`<path d="M6 9l6 6 6-6"/>`)
-- 尺寸：12px × 12px
+- 容器尺寸：12px × 12px（直接设置，非容器+内部SVG结构）
 - 默认颜色：#595959 (N6)
 - 选中颜色：#2A6CDD (Primary)
-- 展开旋转：transform: rotate(180deg)
+- 展开旋转：`transform: rotate(180deg)`
 - 过渡动画：transform 300ms ease-in-out
 
 ## 2. 面包屑 (Breadcrumb)
@@ -107,24 +173,25 @@
 ## 6. 多标签导航 (MultiTab)
 
 - 容器高度：40px，背景 #FFFFFF
-- 容器底部边框：`1px solid #E8E8E8`（与标签项分隔线区分）
-- 当前激活：背景 #FFFFFF，文字 #2A6CDD，字重 600，底部边框颜色与内容区融合（#FFFFFF）
-- 非激活：背景 #F5F5F5，边框 1px solid #E8E8E8，文字 #595959
-- **边框融合设计**：标签项必须保留完整的四边边框（禁止 `border-bottom: none`），激活态通过 `border-bottom-color: #FFFFFF` 实现与下方内容区的无缝融合
-- 关闭按钮：14px × 14px，hover 背景 #E8E8E8，使用 X 图标 (`<path d="M6 6l12 12M6 18L18 6"/>
-`)
+- 容器底部边框：`1px solid #E8E8E8`
+- 容器对齐方式：`align-items: flex-end`（标签底部对齐容器底部，确保与分割线完全贴合）
+- 标签项间距：`gap: 4px`（需定义 `--space-1: 4px`）
+- 标签项内边距：`7px 16px 8px`（上方边框距离文字比原来少1px，下方保持8px不变，整体下移1px）
+- 标签项字号：13px，字重 500
+- 当前激活：背景 #FFFFFF，文字 #2A6CDD，字重 600，**`border-bottom: 1px solid #FFFFFF`**（白色边框覆盖容器底部的灰色边框，实现与内容区无缝融合）
+- 非激活：背景 #F5F5F5，边框 `1px solid #E8E8E8`（不含 border-bottom），文字 #595959
+- **边框融合设计（关键）**：容器底部有 `border-bottom: 1px solid #E8E8E8` 作为统一分割线。未激活标签设置 `border-bottom: none`，使容器边框自然显示为分割线；激活标签设置 `border-bottom: 1px solid #FFFFFF`，白色边框遮挡容器的灰色边框，实现与内容区无缝融合。所有标签统一 `margin-bottom: -1px`（向上偏移 1px，使标签底部边缘与分割线完全贴合），确保激活/非激活标签高度完全一致、下方无任何间隙
+- **过渡动画**：仅过渡 `color` 和 `background`，禁止 `transition: all`（会导致 `margin-bottom`/`border` 属性变化产生动画，造成切换时标签跳动或闪线）
+- 关闭按钮：14px × 14px，圆形（`border-radius: 50%`），`margin-left: 4px`，hover 背景 #E8E8E8
+- 关闭按钮图标：X 图标 `<path d="M6 6l12 12M6 18L18 6"/>`，SVG 尺寸 `width="10" height="10"`，`stroke-width="3"`，`viewBox="0 0 24 24"`
 - **每个标签项都必须有关闭按钮**（包括默认首页标签）
 - 标签最大宽度：160px（过长显示省略号）
+- 标签项之间不使用分隔线，通过 `gap` 自然间隔
 
-### 标签项间分割线
+### 标签激活逻辑（关键）
 
-标签项之间需有视觉分隔线：
-
-- 实现方式：`::after` 伪元素
-- 位置：`position: absolute; right: -5px; top: 50%; transform: translateY(-50%)`
-- 尺寸：`width: 1px; height: 16px`
-- 颜色：`#E8E8E8`
-- 激活态和悬停态隐藏分割线
+- 点击侧边栏菜单项时，**必须先创建/注册标签 DOM 元素，再调用 `activateTab`**，否则新标签的激活状态无法正确设置
+- 标签页切换时同步更新 `tabs` Map 中的 `active` 标记和 DOM 中的 `gf-multitab__item--active` 类
 
 ### 新建标签按钮（可选）
 
@@ -159,3 +226,4 @@
 - 尺寸：大 / 小
 - 功能：页码导航、上一页/下一页、首页/末页、快速跳转、每页条数选择
 - 样式：无边框或细边框（1px solid #E8E8E8）
+- 与内容区上下间距：`padding: 16px 0`（上下各 16px）

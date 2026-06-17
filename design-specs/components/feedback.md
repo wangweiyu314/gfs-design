@@ -63,6 +63,26 @@
 
 **警告类型：** 成功 / 错误 / 警告 / 信息
 
+**布局规范：**
+- 布局：`display: flex; align-items: center`（图标与文字垂直居中）
+- 图标与文字间距：`gap: 8px`
+- 内边距：`12px 16px`
+- 圆角：`2px`
+- 字体大小：13px
+- 图标 SVG 必须设置 `flex-shrink: 0`，防止被长文本挤压导致显示不全
+- **图标来源**：使用 `icons/status/warning-fill.svg`（16×16 viewBox，fill 路径，无裁剪风险），禁止使用手写 stroke circle 图标
+- **SVG 图标 viewBox 裁剪防护**（三重保障）：
+  1. **全局规则**：所有 SVG 设置 `overflow: visible`（防止 stroke 被 viewBox 边界裁剪）
+  2. **半径约束**：`viewBox="0 0 24 24"` + `stroke-width="2"` 时，`circle` 的 `r` 必须 **≤ 7**（外边缘 = r+1 = **8**，距边界 ≥ **4px**）
+  3. **容器防裁剪**：图标容器（`.icon`）设置 `overflow: visible`
+  - 公式：`r + stroke-width/2 ≤ viewBox/2 - 4px`
+  - 示例：`<circle cx="12" cy="12" r="7" stroke-width="2"/>`
+
+**颜色方案：**
+- 信息（info）：背景 `rgba(24, 144, 255, 0.08)`，边框 `1px solid rgba(24, 144, 255, 0.3)`
+- 警告（warning）：背景 `#FFF0E0`，边框 `1px solid rgba(250, 140, 22, 0.3)`
+- 错误（error）：背景 `#FFF2F0`，边框 `1px solid #FFCCC7`
+
 ## 8. 进度条 (Progress)
 
 - 进度条高度：8px
