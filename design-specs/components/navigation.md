@@ -172,29 +172,48 @@ gf-sidebar__menu
 
 ## 6. 多标签导航 (MultiTab)
 
-- 容器高度：40px，背景 #FFFFFF
-- 容器底部边框：`1px solid #E8E8E8`
-- 容器对齐方式：`align-items: flex-end`（标签底部对齐容器底部，确保与分割线完全贴合）
+### 容器样式
+- 高度：40px，背景 #FFFFFF
+- 底部边框：`border-bottom: 1px solid #E8E8E8`（统一分割线）
+- 对齐方式：`align-items: flex-end`（标签底部对齐容器底部，确保与分割线完全贴合）
 - 标签项间距：`gap: 4px`（需定义 `--space-1: 4px`）
-- 标签项内边距：`7px 16px 8px`（上方边框距离文字比原来少1px，下方保持8px不变，整体下移1px）
-- 标签项字号：13px，字重 500
-- 当前激活：背景 #FFFFFF，文字 #2A6CDD，字重 600，**`border-bottom: 1px solid #FFFFFF`**（白色边框覆盖容器底部的灰色边框，实现与内容区无缝融合）
-- 非激活：背景 #F5F5F5，边框 `1px solid #E8E8E8`（不含 border-bottom），文字 #595959
-- **边框融合设计（关键）**：容器底部有 `border-bottom: 1px solid #E8E8E8` 作为统一分割线。未激活标签设置 `border-bottom: none`，使容器边框自然显示为分割线；激活标签设置 `border-bottom: 1px solid #FFFFFF`，白色边框遮挡容器的灰色边框，实现与内容区无缝融合。所有标签统一 `margin-bottom: -1px`（向上偏移 1px，使标签底部边缘与分割线完全贴合），确保激活/非激活标签高度完全一致、下方无任何间隙
-- **过渡动画**：仅过渡 `color` 和 `background`，禁止 `transition: all`（会导致 `margin-bottom`/`border` 属性变化产生动画，造成切换时标签跳动或闪线）
-- 关闭按钮：14px × 14px，圆形（`border-radius: 50%`），`margin-left: 4px`，hover 背景 #E8E8E8
-- 关闭按钮图标：X 图标 `<path d="M6 6l12 12M6 18L18 6"/>`，SVG 尺寸 `width="10" height="10"`，`stroke-width="3"`，`viewBox="0 0 24 24"`
-- **每个标签项都必须有关闭按钮**（包括默认首页标签）
-- 标签最大宽度：160px（过长显示省略号）
+
+### 标签项样式
+- 内边距：`7px 16px 8px`（上方边框距离文字少1px，整体下移1px）
+- 字号：13px，字重 500
+- 最大宽度：160px（过长显示省略号）
+- 所有标签统一 `margin-bottom: -1px`（向上偏移 1px，使标签底部边缘与分割线完全贴合）
 - 标签项之间不使用分隔线，通过 `gap` 自然间隔
 
-### 标签激活逻辑（关键）
+### 标签项状态
+| 状态 | 背景 | 文字色 | 字重 | border-bottom |
+|------|------|--------|------|---------------|
+| 非激活 | #F5F5F5 | #595959 | 500 | `1px solid transparent`（透明占位，与激活态高度一致） |
+| 激活 | #FFFFFF | #2A6CDD | 600 | `1px solid #FFFFFF`（白色边框覆盖容器灰色分割线，实现与内容区无缝融合） |
 
+### 边框融合设计（关键）
+1. 容器底部有 `border-bottom: 1px solid #E8E8E8` 作为统一分割线
+2. 非激活标签：`border-bottom: 1px solid transparent`（透明占位边框，与激活态高度完全一致）
+3. 激活标签：`border-bottom: 1px solid #FFFFFF`（白色边框遮挡容器灰色边框，实现无缝融合）
+4. 所有标签统一 `margin-bottom: -1px`（向上偏移 1px，使标签底部边缘与分割线完全贴合）
+5. 结果：激活/非激活标签高度完全一致、下方无任何间隙、与分割线完全贴合
+
+### 过渡动画
+- 仅过渡 `color` 和 `background`
+- **禁止 `transition: all`**（会导致 `margin-bottom`/`border` 属性变化产生动画，造成切换时标签跳动或闪线）
+
+### 关闭按钮
+- 尺寸：14px × 14px，圆形（`border-radius: 50%`），`margin-left: 4px`
+- hover 背景：#E8E8E8
+- 图标：X 图标 `<path d="M6 6l12 12M6 18L18 6"/>`
+- SVG 尺寸：`width="10" height="10"`，`stroke-width="3"`，`viewBox="0 0 24 24"`
+- **每个标签项都必须有关闭按钮**（包括默认首页标签）
+
+### 标签激活逻辑（关键）
 - 点击侧边栏菜单项时，**必须先创建/注册标签 DOM 元素，再调用 `activateTab`**，否则新标签的激活状态无法正确设置
 - 标签页切换时同步更新 `tabs` Map 中的 `active` 标记和 DOM 中的 `gf-multitab__item--active` 类
 
 ### 新建标签按钮（可选）
-
 - 仅在需要用户手动新建标签页的场景使用
 - 尺寸：28px × 28px，边框 1px solid #E8E8E8
 - 如果标签页由系统根据导航自动创建，**不显示新建标签按钮**
